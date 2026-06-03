@@ -1,2520 +1,873 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta name="theme-color" content="#05070d" />
-  <title>World Cup 2026 Intelligence Command</title>
-  <style>
-    :root {
-      color-scheme: dark;
-      --bg: #05070d;
-      --bg-2: #070b14;
-      --surface: rgba(15, 21, 34, .72);
-      --surface-2: rgba(24, 33, 52, .62);
-      --surface-3: rgba(255,255,255,.055);
-      --glass: rgba(10, 15, 26, .58);
-      --line: rgba(255,255,255,.105);
-      --line-strong: rgba(255,255,255,.18);
-      --text: rgba(255,255,255,.96);
-      --muted: rgba(235,242,255,.64);
-      --faint: rgba(235,242,255,.38);
-      --accent: #39ffdc;
-      --accent-2: #8b5cf6;
-      --accent-3: #ffcc66;
-      --danger: #ff416c;
-      --success: #45f28c;
-      --warning: #ffcc66;
-      --shadow: 0 30px 100px rgba(0,0,0,.44);
-      --shadow-soft: 0 18px 45px rgba(0,0,0,.24);
-      --radius-xl: 30px;
-      --radius-lg: 24px;
-      --radius-md: 18px;
-      --radius-sm: 14px;
-      --nav-h: 78px;
-      --compact-scale: 1;
-      --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    }
-body.light {
-  color-scheme: light;
-  --bg: #f5f7fb;
-  --bg-2: #edf1f7;
-  --surface: rgba(255,255,255,.78);
-  --surface-2: rgba(255,255,255,.68);
-  --surface-3: rgba(10,20,40,.055);
-  --glass: rgba(255,255,255,.7);
-  --line: rgba(20,30,50,.12);
-  --line-strong: rgba(20,30,50,.18);
-  --text: rgba(9,13,24,.94);
-  --muted: rgba(25,35,55,.64);
-  --faint: rgba(25,35,55,.42);
-  --shadow: 0 30px 80px rgba(35,45,75,.14);
-  --shadow-soft: 0 18px 45px rgba(35,45,75,.12);
-}
-body.compact {
-  --compact-scale: .82;
-  --radius-xl: 24px;
-  --radius-lg: 20px;
-  --radius-md: 15px;
-  --radius-sm: 12px;
-}
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: var(--font);
-  -webkit-tap-highlight-color: transparent;
-}
-html {
-  scroll-behavior: smooth;
-}
-body {
-  min-height: 100vh;
-  background:
-    radial-gradient(circle at 18% -5%, rgba(57,255,220,.16), transparent 34vw),
-    radial-gradient(circle at 82% 8%, rgba(139,92,246,.20), transparent 36vw),
-    radial-gradient(circle at 60% 100%, rgba(255,204,102,.10), transparent 38vw),
-    linear-gradient(145deg, var(--bg), var(--bg-2));
-  color: var(--text);
-  overflow-x: hidden;
-  padding-bottom: env(safe-area-inset-bottom);
-  -webkit-font-smoothing: antialiased;
-  text-rendering: geometricPrecision;
-}
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(rgba(255,255,255,.028) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.022) 1px, transparent 1px);
-  background-size: 56px 56px;
-  mask-image: radial-gradient(circle at center, black 0%, transparent 78%);
-  opacity: .5;
-  z-index: -2;
-}
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  background: radial-gradient(circle at 50% 22%, transparent 0, transparent 34%, rgba(0,0,0,.22) 100%);
-  z-index: -1;
-}
-button, input, select {
-  font: inherit;
-}
-button {
-  border: 0;
-  cursor: pointer;
-  color: inherit;
-}
-.app {
-  width: min(1800px, 100%);
-  margin: 0 auto;
-  padding: 18px clamp(14px, 2vw, 34px) 44px;
-}
-.topbar {
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: 18px;
-  align-items: center;
-  padding: calc(12px + env(safe-area-inset-top)) 0 12px;
-  backdrop-filter: blur(26px);
-  -webkit-backdrop-filter: blur(26px);
-}
-.topbar::before {
-  content: "";
-  position: absolute;
-  inset: 0 calc(clamp(14px, 2vw, 34px) * -1);
-  background: linear-gradient(to bottom, rgba(5,7,13,.92), rgba(5,7,13,.55), transparent);
-  pointer-events: none;
-  z-index: -1;
-}
-body.light .topbar::before {
-  background: linear-gradient(to bottom, rgba(245,247,251,.9), rgba(245,247,251,.58), transparent);
-}
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 13px;
-  min-width: 232px;
-}
-.brand-mark {
-  width: 48px;
-  height: 48px;
-  border-radius: 18px;
-  position: relative;
-  display: grid;
-  place-items: center;
-  background:
-    radial-gradient(circle at 30% 25%, rgba(255,255,255,.9), transparent 18%),
-    conic-gradient(from 210deg, var(--accent), var(--accent-2), var(--accent-3), var(--accent));
-  box-shadow: 0 0 36px rgba(57,255,220,.22), inset 0 0 0 1px rgba(255,255,255,.26);
-  overflow: hidden;
-}
-.brand-mark::before {
-  content: "";
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  border: 2px solid rgba(5,7,13,.85);
-  box-shadow: inset 0 0 0 4px rgba(5,7,13,.3);
-}
-.brand h1 {
-  font-size: 16px;
-  line-height: 1.05;
-  letter-spacing: -.02em;
-  font-weight: 850;
-}
-.brand p {
-  margin-top: 4px;
-  font-size: 11px;
-  font-weight: 750;
-  letter-spacing: .18em;
-  text-transform: uppercase;
-  color: var(--accent);
-}
-.nav-tabs {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  padding: 6px;
-  border: 1px solid var(--line);
-  background: var(--glass);
-  border-radius: 999px;
-  box-shadow: var(--shadow-soft);
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-.nav-tabs::-webkit-scrollbar {
-  display: none;
-}
-.nav-tab {
-  position: relative;
-  white-space: nowrap;
-  padding: 11px 14px;
-  border-radius: 999px;
-  background: transparent;
-  color: var(--muted);
-  font-size: 13px;
-  font-weight: 760;
-  transition: color .22s ease, background .22s ease, transform .22s ease;
-}
-.nav-tab:hover {
-  color: var(--text);
-  transform: translateY(-1px);
-  background: rgba(255,255,255,.06);
-}
-.nav-tab.active {
-  color: #061018;
-  background: linear-gradient(135deg, var(--accent), #b9fff2);
-  box-shadow: 0 8px 28px rgba(57,255,220,.28);
-}
-.actions {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 9px;
-}
-.icon-btn, .pill-btn {
-  min-height: 42px;
-  border-radius: 999px;
-  background: var(--glass);
-  border: 1px solid var(--line);
-  box-shadow: var(--shadow-soft);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  transition: transform .22s ease, border-color .22s ease, background .22s ease, box-shadow .22s ease;
-}
-.icon-btn {
-  width: 42px;
-  font-size: 17px;
-}
-.pill-btn {
-  padding: 0 14px;
-  font-size: 12px;
-  font-weight: 790;
-  color: var(--muted);
-}
-.icon-btn:hover, .pill-btn:hover {
-  transform: translateY(-2px);
-  border-color: rgba(57,255,220,.36);
-  box-shadow: 0 14px 45px rgba(57,255,220,.12);
-}
-.pill-btn.active {
-  color: #061018;
-  background: linear-gradient(135deg, var(--accent), #b9fff2);
-  border-color: transparent;
-}
-.ticker {
-  margin: 2px 0 18px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 14px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: rgba(255,255,255,.042);
-  overflow: hidden;
-}
-.ticker-badge {
-  flex: 0 0 auto;
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  padding: 7px 11px;
-  border-radius: 999px;
-  background: rgba(255,65,108,.14);
-  color: #ff7d9b;
-  font-size: 11px;
-  font-weight: 850;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-}
-.pulse-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--danger);
-  box-shadow: 0 0 0 0 rgba(255,65,108,.8);
-  animation: pulse 1.7s infinite;
-}
-@keyframes pulse {
-  0% { box-shadow: 0 0 0 0 rgba(255,65,108,.75); transform: scale(1); }
-  70% { box-shadow: 0 0 0 10px rgba(255,65,108,0); transform: scale(1.08); }
-  100% { box-shadow: 0 0 0 0 rgba(255,65,108,0); transform: scale(1); }
-}
-.ticker-track {
-  overflow: hidden;
-  flex: 1;
-  mask-image: linear-gradient(90deg, transparent, black 7%, black 93%, transparent);
-}
-.ticker-line {
-  display: inline-flex;
-  gap: 26px;
-  white-space: nowrap;
-  color: var(--muted);
-  font-size: 12px;
-  font-weight: 690;
-  animation: ticker 36s linear infinite;
-}
-.ticker-line span strong {
-  color: var(--text);
-  font-weight: 850;
-}
-@keyframes ticker {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-.hero-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1.4fr) minmax(330px, .6fr);
-  gap: 18px;
-  margin-bottom: 18px;
-}
-.hero-card, .panel, .metric-card, .match-card, .team-card, .player-card, .news-card, .stadium-card {
-  border: 1px solid var(--line);
-  background: linear-gradient(180deg, rgba(255,255,255,.082), rgba(255,255,255,.036));
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(28px);
-  -webkit-backdrop-filter: blur(28px);
-}
-.hero-card {
-  position: relative;
-  overflow: hidden;
-  border-radius: var(--radius-xl);
-  padding: clamp(22px, 3vw, 36px);
-  min-height: 470px;
-  isolation: isolate;
-}
-.hero-card::before {
-  content: "";
-  position: absolute;
-  inset: -35%;
-  background:
-    radial-gradient(circle at 24% 28%, rgba(57,255,220,.22), transparent 23%),
-    radial-gradient(circle at 75% 24%, rgba(139,92,246,.25), transparent 28%),
-    radial-gradient(circle at 50% 82%, rgba(255,204,102,.14), transparent 28%),
-    repeating-linear-gradient(115deg, transparent 0 22px, rgba(255,255,255,.035) 22px 23px);
-  filter: saturate(1.25);
-  animation: drift 18s ease-in-out infinite alternate;
-  z-index: -2;
-}
-.hero-card::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(to bottom, rgba(5,7,13,.08), rgba(5,7,13,.72)),
-    radial-gradient(circle at 50% 52%, transparent 0 34%, rgba(0,0,0,.3) 60%);
-  z-index: -1;
-}
-@keyframes drift {
-  from { transform: translate3d(-1%, -1%, 0) rotate(-1deg); }
-  to { transform: translate3d(1%, 1%, 0) rotate(1deg); }
-}
-.hero-top {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 32px;
-}
-.eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 11px;
-  border-radius: 999px;
-  color: var(--accent);
-  background: rgba(57,255,220,.1);
-  border: 1px solid rgba(57,255,220,.24);
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: .14em;
-  font-weight: 850;
-}
-.hero-title {
-  margin-top: 14px;
-  max-width: 880px;
-  font-size: clamp(36px, 6.4vw, 86px);
-  line-height: .88;
-  letter-spacing: -.075em;
-  font-weight: 920;
-}
-.hero-sub {
-  margin-top: 18px;
-  max-width: 720px;
-  color: rgba(255,255,255,.74);
-  font-size: clamp(14px, 1.5vw, 17px);
-  line-height: 1.55;
-  font-weight: 560;
-}
-body.light .hero-sub {
-  color: rgba(9,13,24,.72);
-}
-.hero-command {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-top: 24px;
-}
-.primary-btn {
-  border-radius: 999px;
-  padding: 13px 17px;
-  background: linear-gradient(135deg, var(--accent), #b9fff2);
-  color: #061018;
-  font-size: 13px;
-  font-weight: 880;
-  box-shadow: 0 16px 44px rgba(57,255,220,.24);
-  transition: transform .22s ease, box-shadow .22s ease;
-}
-.primary-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 22px 58px rgba(57,255,220,.30);
-}
-.ghost-btn {
-  border-radius: 999px;
-  padding: 13px 17px;
-  background: rgba(255,255,255,.07);
-  border: 1px solid var(--line);
-  color: var(--text);
-  font-size: 13px;
-  font-weight: 800;
-  transition: transform .22s ease, background .22s ease;
-}
-.ghost-btn:hover {
-  transform: translateY(-2px);
-  background: rgba(255,255,255,.11);
-}
-.scoreboard {
-  margin-top: clamp(30px, 5vw, 54px);
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  gap: clamp(14px, 4vw, 46px);
-  align-items: center;
-}
-.score-team {
-  min-width: 0;
-  display: grid;
-  gap: 12px;
-}
-.score-team.away {
-  text-align: right;
-  justify-items: end;
-}
-.flag-orb {
-  width: clamp(62px, 10vw, 104px);
-  height: clamp(62px, 10vw, 104px);
-  display: grid;
-  place-items: center;
-  font-size: clamp(34px, 6vw, 62px);
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at 35% 25%, rgba(255,255,255,.30), transparent 24%),
-    rgba(255,255,255,.08);
-  border: 1px solid rgba(255,255,255,.18);
-  box-shadow: inset 0 0 35px rgba(255,255,255,.05), 0 24px 50px rgba(0,0,0,.26);
-}
-.score-team h2 {
-  font-size: clamp(22px, 3vw, 44px);
-  line-height: .95;
-  letter-spacing: -.055em;
-  font-weight: 920;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
-}
-.score-team p {
-  color: rgba(255,255,255,.58);
-  font-size: 12px;
-  font-weight: 750;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-}
-body.light .score-team p {
-  color: rgba(9,13,24,.58);
-}
-.score-core {
-  position: relative;
-  min-width: clamp(130px, 16vw, 240px);
-  padding: 20px clamp(18px, 3vw, 34px);
-  border-radius: 26px;
-  text-align: center;
-  background: rgba(0,0,0,.24);
-  border: 1px solid rgba(255,255,255,.14);
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.04), 0 24px 80px rgba(0,0,0,.26);
-}
-body.light .score-core {
-  background: rgba(255,255,255,.46);
-}
-.score-core .score {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(8px, 2vw, 18px);
-  font-size: clamp(50px, 9vw, 118px);
-  line-height: .82;
-  letter-spacing: -.08em;
-  font-variant-numeric: tabular-nums;
-  font-weight: 930;
-  text-shadow: 0 0 30px rgba(57,255,220,.20);
-}
-.score-core .minute {
-  margin-top: 12px;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  color: #ff7d9b;
-  font-size: 12px;
-  font-weight: 900;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-}
-.mini-stack {
-  display: grid;
-  gap: 14px;
-}
-.intel-card {
-  position: relative;
-  overflow: hidden;
-  min-height: 145px;
-  padding: 20px;
-  border-radius: var(--radius-lg);
-  background: var(--surface);
-  border: 1px solid var(--line);
-  box-shadow: var(--shadow-soft);
-}
-.intel-card::after {
-  content: "";
-  position: absolute;
-  width: 140px;
-  height: 140px;
-  border-radius: 50%;
-  right: -70px;
-  top: -70px;
-  background: radial-gradient(circle, rgba(57,255,220,.20), transparent 65%);
-}
-.intel-card h3 {
-  font-size: 13px;
-  color: var(--muted);
-  font-weight: 800;
-  letter-spacing: .09em;
-  text-transform: uppercase;
-}
-.intel-value {
-  margin-top: 12px;
-  font-size: 34px;
-  letter-spacing: -.055em;
-  line-height: 1;
-  font-weight: 920;
-}
-.intel-card p {
-  margin-top: 9px;
-  color: var(--muted);
-  font-size: 13px;
-  line-height: 1.45;
-  font-weight: 560;
-}
-.momentum {
-  margin-top: 15px;
-  height: 12px;
-  border-radius: 999px;
-  overflow: hidden;
-  display: flex;
-  background: rgba(255,255,255,.08);
-  border: 1px solid var(--line);
-}
-.momentum span {
-  height: 100%;
-}
-.momentum span:first-child {
-  background: linear-gradient(90deg, var(--accent), rgba(57,255,220,.5));
-}
-.momentum span:last-child {
-  background: linear-gradient(90deg, rgba(139,92,246,.5), var(--accent-2));
-}
-.toolbar {
-  display: grid;
-  grid-template-columns: minmax(230px, 1fr) auto auto auto;
-  gap: 12px;
-  margin: 18px 0;
-  align-items: center;
-}
-.search-shell {
-  position: relative;
-}
-.search-shell input {
-  width: 100%;
-  height: 50px;
-  border-radius: 999px;
-  border: 1px solid var(--line);
-  background: var(--glass);
-  color: var(--text);
-  padding: 0 46px 0 48px;
-  outline: 0;
-  font-size: 14px;
-  font-weight: 690;
-  box-shadow: var(--shadow-soft);
-  transition: border-color .22s ease, box-shadow .22s ease, background .22s ease;
-}
-.search-shell input:focus {
-  border-color: rgba(57,255,220,.38);
-  box-shadow: 0 0 0 4px rgba(57,255,220,.08), var(--shadow-soft);
-  background: rgba(255,255,255,.075);
-}
-.search-shell .search-ico {
-  position: absolute;
-  left: 17px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--muted);
-  font-size: 17px;
-}
-.kbd {
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  padding: 4px 8px;
-  border-radius: 8px;
-  border: 1px solid var(--line);
-  color: var(--faint);
-  font-size: 11px;
-  font-weight: 800;
-}
-select {
-  height: 50px;
-  border-radius: 999px;
-  border: 1px solid var(--line);
-  background: var(--glass);
-  color: var(--text);
-  padding: 0 38px 0 14px;
-  outline: 0;
-  box-shadow: var(--shadow-soft);
-  font-size: 13px;
-  font-weight: 760;
-}
-.section {
-  display: none;
-  animation: sectionIn .42s cubic-bezier(.16,1,.3,1) both;
-}
-.section.active {
-  display: block;
-}
-@keyframes sectionIn {
-  from { opacity: 0; transform: translateY(14px); filter: blur(4px); }
-  to { opacity: 1; transform: translateY(0); filter: blur(0); }
-}
-.dashboard-grid {
-  display: grid;
-  grid-template-columns: 1.15fr .85fr;
-  gap: 18px;
-  align-items: start;
-}
-.panel {
-  border-radius: var(--radius-xl);
-  background: var(--surface);
-  padding: calc(22px * var(--compact-scale));
-  overflow: hidden;
-}
-.panel-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 14px;
-  margin-bottom: calc(18px * var(--compact-scale));
-}
-.panel-title h2 {
-  font-size: clamp(21px, 2vw, 32px);
-  line-height: 1;
-  letter-spacing: -.045em;
-  font-weight: 910;
-}
-.panel-title p {
-  margin-top: 7px;
-  color: var(--muted);
-  font-size: 13px;
-  line-height: 1.4;
-  font-weight: 560;
-}
-.chip-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-.chip {
-  min-height: 36px;
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  padding: 0 12px;
-  border-radius: 999px;
-  border: 1px solid var(--line);
-  background: rgba(255,255,255,.052);
-  color: var(--muted);
-  font-size: 12px;
-  font-weight: 790;
-  transition: transform .2s ease, background .2s ease, border-color .2s ease, color .2s ease;
-}
-.chip:hover {
-  transform: translateY(-1px);
-  color: var(--text);
-  border-color: var(--line-strong);
-}
-.chip.active {
-  color: #061018;
-  background: linear-gradient(135deg, var(--accent), #b9fff2);
-  border-color: transparent;
-  box-shadow: 0 12px 30px rgba(57,255,220,.16);
-}
-.metrics-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 14px;
-  margin-bottom: 18px;
-}
-.metric-card {
-  position: relative;
-  overflow: hidden;
-  border-radius: var(--radius-lg);
-  padding: calc(18px * var(--compact-scale));
-  min-height: 136px;
-  background: var(--surface-2);
-}
-.metric-card::after {
-  content: "";
-  position: absolute;
-  inset: auto -40px -50px auto;
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(57,255,220,.18), transparent 70%);
-}
-.metric-label {
-  color: var(--muted);
-  font-size: 11px;
-  font-weight: 850;
-  text-transform: uppercase;
-  letter-spacing: .12em;
-}
-.metric-number {
-  margin-top: 13px;
-  font-size: clamp(28px, 3vw, 44px);
-  line-height: .9;
-  letter-spacing: -.06em;
-  font-weight: 930;
-  font-variant-numeric: tabular-nums;
-}
-.metric-note {
-  margin-top: 10px;
-  color: var(--faint);
-  font-size: 12px;
-  font-weight: 650;
-}
-.match-list {
-  display: grid;
-  gap: 12px;
-}
-.match-card {
-  position: relative;
-  overflow: hidden;
-  border-radius: var(--radius-lg);
-  padding: calc(18px * var(--compact-scale));
-  background: var(--surface-2);
-  transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease, background .22s ease;
-}
-.match-card:hover {
-  transform: translateY(-3px);
-  border-color: rgba(57,255,220,.28);
-  box-shadow: 0 24px 70px rgba(0,0,0,.32), 0 0 0 1px rgba(57,255,220,.05);
-  background: rgba(30,40,62,.72);
-}
-body.light .match-card:hover {
-  background: rgba(255,255,255,.88);
-}
-.match-card.live::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, rgba(255,65,108,.16), transparent 34%);
-  pointer-events: none;
-}
-.match-meta-row {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  align-items: center;
-  margin-bottom: 16px;
-  position: relative;
-}
-.match-label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-width: 0;
-  color: var(--muted);
-  font-size: 12px;
-  font-weight: 830;
-  text-transform: uppercase;
-  letter-spacing: .08em;
-}
-.status-pill {
-  flex: 0 0 auto;
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  padding: 7px 10px;
-  border-radius: 999px;
-  background: rgba(255,255,255,.07);
-  color: var(--muted);
-  border: 1px solid var(--line);
-  font-size: 11px;
-  font-weight: 900;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-}
-.status-pill.live {
-  color: #ff8aa5;
-  background: rgba(255,65,108,.14);
-  border-color: rgba(255,65,108,.25);
-}
-.match-score-row {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  gap: 14px;
-  align-items: center;
-  position: relative;
-}
-.mini-team {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-width: 0;
-}
-.mini-team.away {
-  justify-content: flex-end;
-  text-align: right;
-}
-.mini-flag {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  flex: 0 0 auto;
-  display: grid;
-  place-items: center;
-  font-size: 22px;
-  background: rgba(255,255,255,.075);
-  border: 1px solid var(--line);
-}
-.mini-team-name {
-  min-width: 0;
-}
-.mini-team-name strong {
-  display: block;
-  font-size: 15px;
-  font-weight: 850;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.mini-team-name span {
-  display: block;
-  margin-top: 3px;
-  color: var(--faint);
-  font-size: 11px;
-  font-weight: 760;
-}
-.score-pill {
-  min-width: 86px;
-  text-align: center;
-  padding: 10px 12px;
-  border-radius: 18px;
-  background: rgba(0,0,0,.20);
-  border: 1px solid var(--line);
-  font-size: 28px;
-  font-weight: 930;
-  letter-spacing: -.06em;
-  font-variant-numeric: tabular-nums;
-}
-body.light .score-pill {
-  background: rgba(255,255,255,.55);
-}
-.match-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-  margin-top: 16px;
-  color: var(--muted);
-  font-size: 12px;
-  font-weight: 650;
-  position: relative;
-}
-.favorite {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  display: inline-grid;
-  place-items: center;
-  background: rgba(255,255,255,.07);
-  border: 1px solid var(--line);
-  transition: transform .2s ease, background .2s ease, color .2s ease;
-}
-.favorite:hover {
-  transform: scale(1.08);
-}
-.favorite.active {
-  color: var(--accent-3);
-  background: rgba(255,204,102,.13);
-  border-color: rgba(255,204,102,.32);
-}
-.timeline {
-  margin-top: 16px;
-  padding-top: 16px;
-  border-top: 1px solid var(--line);
-  display: grid;
-  gap: 10px;
-  animation: sectionIn .28s ease both;
-}
-.timeline-row {
-  display: grid;
-  grid-template-columns: 42px 1fr;
-  gap: 10px;
-  align-items: start;
-  color: var(--muted);
-  font-size: 12px;
-  line-height: 1.35;
-}
-.timeline-row strong {
-  color: var(--text);
-}
-.timeline-min {
-  color: var(--accent);
-  font-weight: 900;
-  font-variant-numeric: tabular-nums;
-}
-.table {
-  display: grid;
-  gap: 7px;
-}
-.table-row {
-  display: grid;
-  grid-template-columns: 34px minmax(150px, 1fr) repeat(6, minmax(42px, 56px));
-  gap: 8px;
-  align-items: center;
-  padding: 12px 12px;
-  border-radius: 16px;
-  background: rgba(255,255,255,.045);
-  border: 1px solid transparent;
-  transition: transform .2s ease, border-color .2s ease, background .2s ease;
-}
-.table-row:not(.head):hover {
-  transform: translateY(-1px);
-  border-color: rgba(57,255,220,.22);
-  background: rgba(255,255,255,.07);
-}
-.table-row.head {
-  color: var(--faint);
-  background: transparent;
-  font-size: 11px;
-  font-weight: 870;
-  text-transform: uppercase;
-  letter-spacing: .08em;
-}
-.club {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-width: 0;
-  font-size: 13px;
-  font-weight: 820;
-}
-.club span:last-child {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.num {
-  text-align: center;
-  font-size: 13px;
-  font-weight: 770;
-  font-variant-numeric: tabular-nums;
-}
-.pts {
-  color: var(--accent);
-  font-weight: 930;
-}
-.form {
-  display: inline-flex;
-  gap: 4px;
-  justify-content: center;
-}
-.form i {
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  display: inline-grid;
-  place-items: center;
-  font-style: normal;
-  font-size: 9px;
-  font-weight: 950;
-  color: #061018;
-}
-.form .w { background: var(--success); }
-.form .d { background: var(--warning); }
-.form .l { background: var(--danger); color: white; }
-.bracket-wrap {
-  overflow-x: auto;
-  padding-bottom: 8px;
-}
-.bracket {
-  min-width: 1180px;
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 18px;
-  align-items: center;
-}
-.round {
-  display: grid;
-  gap: 18px;
-}
-.round h3 {
-  color: var(--muted);
-  font-size: 12px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: .14em;
-  padding-left: 4px;
-}
-.bracket-node {
-  position: relative;
-  padding: 14px;
-  border-radius: 18px;
-  background: rgba(255,255,255,.058);
-  border: 1px solid var(--line);
-  min-height: 94px;
-  transition: transform .2s ease, border-color .2s ease;
-}
-.bracket-node:hover {
-  transform: translateY(-2px);
-  border-color: rgba(57,255,220,.28);
-}
-.bracket-team-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 0;
-  font-size: 13px;
-  font-weight: 800;
-}
-.bracket-team-row:first-child {
-  border-bottom: 1px solid var(--line);
-}
-.winner {
-  color: var(--accent-3);
-}
-.cards-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 14px;
-}
-.team-card, .player-card, .news-card, .stadium-card {
-  border-radius: var(--radius-lg);
-  background: var(--surface-2);
-  padding: calc(18px * var(--compact-scale));
-  min-height: 220px;
-  position: relative;
-  overflow: hidden;
-  transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease;
-}
-.team-card:hover, .player-card:hover, .news-card:hover, .stadium-card:hover {
-  transform: translateY(-4px);
-  border-color: rgba(57,255,220,.28);
-  box-shadow: 0 24px 70px rgba(0,0,0,.30);
-}
-.team-card::after, .player-card::after, .stadium-card::after {
-  content: "";
-  position: absolute;
-  width: 150px;
-  height: 150px;
-  right: -70px;
-  top: -65px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(57,255,220,.16), transparent 68%);
-  pointer-events: none;
-}
-.card-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 14px;
-  position: relative;
-}
-.big-flag {
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  font-size: 38px;
-  background: rgba(255,255,255,.08);
-  border: 1px solid var(--line);
-  box-shadow: inset 0 0 30px rgba(255,255,255,.04);
-}
-.team-card h3, .player-card h3, .stadium-card h3 {
-  margin-top: 18px;
-  font-size: 22px;
-  line-height: 1;
-  letter-spacing: -.04em;
-  font-weight: 910;
-  position: relative;
-}
-.team-card p, .player-card p, .stadium-card p, .news-card p {
-  margin-top: 9px;
-  color: var(--muted);
-  font-size: 13px;
-  line-height: 1.45;
-  font-weight: 560;
-  position: relative;
-}
-.rating-bars {
-  margin-top: 18px;
-  display: grid;
-  gap: 10px;
-  position: relative;
-}
-.bar-row {
-  display: grid;
-  grid-template-columns: 68px 1fr 34px;
-  gap: 9px;
-  align-items: center;
-  font-size: 11px;
-  color: var(--muted);
-  font-weight: 850;
-  text-transform: uppercase;
-  letter-spacing: .07em;
-}
-.bar {
-  height: 8px;
-  border-radius: 999px;
-  background: rgba(255,255,255,.08);
-  overflow: hidden;
-  border: 1px solid var(--line);
-}
-.bar span {
-  display: block;
-  height: 100%;
-  border-radius: inherit;
-  background: linear-gradient(90deg, var(--accent), var(--accent-2));
-}
-.avatar {
-  width: 60px;
-  height: 60px;
-  border-radius: 22px;
-  display: grid;
-  place-items: center;
-  font-size: 24px;
-  font-weight: 930;
-  color: #061018;
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  box-shadow: 0 18px 42px rgba(57,255,220,.16);
-}
-.stat-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  margin-top: 18px;
-  position: relative;
-}
-.stat-box {
-  padding: 12px 8px;
-  border-radius: 15px;
-  background: rgba(255,255,255,.055);
-  border: 1px solid var(--line);
-  text-align: center;
-}
-.stat-box strong {
-  display: block;
-  font-size: 19px;
-  font-weight: 930;
-  font-variant-numeric: tabular-nums;
-}
-.stat-box span {
-  display: block;
-  margin-top: 4px;
-  font-size: 10px;
-  color: var(--faint);
-  font-weight: 880;
-  text-transform: uppercase;
-  letter-spacing: .08em;
-}
-.analytics-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
-}
-.viz-card {
-  min-height: 270px;
-  border-radius: var(--radius-lg);
-  padding: 18px;
-  background: rgba(255,255,255,.048);
-  border: 1px solid var(--line);
-  overflow: hidden;
-  position: relative;
-}
-.viz-card h3 {
-  font-size: 15px;
-  font-weight: 900;
-  letter-spacing: -.02em;
-}
-.viz-card p {
-  margin-top: 6px;
-  color: var(--muted);
-  font-size: 12px;
-  line-height: 1.42;
-}
-.radar {
-  margin: 22px auto 4px;
-  width: 180px;
-  height: 180px;
-  position: relative;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle, transparent 27%, rgba(255,255,255,.05) 28% 29%, transparent 30% 54%, rgba(255,255,255,.05) 55% 56%, transparent 57%),
-    conic-gradient(from 0deg, rgba(57,255,220,.18), rgba(139,92,246,.22), rgba(255,204,102,.16), rgba(57,255,220,.18));
-  clip-path: polygon(50% 0%, 92% 26%, 82% 82%, 50% 100%, 18% 82%, 8% 26%);
-  filter: drop-shadow(0 18px 35px rgba(57,255,220,.12));
-}
-.radar::after {
-  content: "";
-  position: absolute;
-  inset: 30px 24px 20px 28px;
-  background: linear-gradient(135deg, rgba(57,255,220,.9), rgba(139,92,246,.7));
-  clip-path: polygon(50% 2%, 87% 31%, 70% 80%, 48% 92%, 24% 74%, 17% 34%);
-  opacity: .75;
-}
-.bar-chart {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 10px;
-  height: 175px;
-  align-items: end;
-  margin-top: 30px;
-}
-.bar-chart i {
-  display: block;
-  border-radius: 999px 999px 10px 10px;
-  background: linear-gradient(180deg, var(--accent), rgba(139,92,246,.62));
-  box-shadow: 0 12px 26px rgba(57,255,220,.13);
-  min-height: 24px;
-  animation: grow .72s cubic-bezier(.16,1,.3,1) both;
-}
-@keyframes grow {
-  from { height: 0; opacity: 0; }
-  to { opacity: 1; }
-}
-.heat-map {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: 5px;
-  margin-top: 28px;
-}
-.heat-map i {
-  aspect-ratio: 1;
-  border-radius: 7px;
-  background: rgba(255,255,255,.07);
-  border: 1px solid var(--line);
-}
-.heat-map i.hot1 { background: rgba(57,255,220,.18); }
-.heat-map i.hot2 { background: rgba(57,255,220,.34); }
-.heat-map i.hot3 { background: rgba(57,255,220,.62); }
-.heat-map i.hot4 { background: rgba(255,204,102,.72); }
-.news-card {
-  min-height: 260px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-.news-kicker {
-  display: inline-flex;
-  align-items: center;
-  width: fit-content;
-  padding: 7px 10px;
-  border-radius: 999px;
-  background: rgba(139,92,246,.13);
-  color: #cbbcff;
-  border: 1px solid rgba(139,92,246,.24);
-  font-size: 11px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: .09em;
-}
-.news-card h3 {
-  margin-top: 18px;
-  font-size: 22px;
-  line-height: 1.02;
-  letter-spacing: -.04em;
-  font-weight: 920;
-}
-.news-meta {
-  margin-top: 16px;
-  color: var(--faint);
-  font-size: 12px;
-  font-weight: 750;
-}
-.stadium-visual {
-  height: 112px;
-  border-radius: 20px;
-  position: relative;
-  overflow: hidden;
-  background:
-    radial-gradient(ellipse at center, rgba(57,255,220,.22), transparent 36%),
-    linear-gradient(135deg, rgba(139,92,246,.38), rgba(57,255,220,.10)),
-    repeating-linear-gradient(90deg, rgba(255,255,255,.10) 0 1px, transparent 1px 18px);
-  border: 1px solid var(--line);
-}
-.stadium-visual::after {
-  content: "";
-  position: absolute;
-  inset: 24px 34px;
-  border: 2px solid rgba(255,255,255,.36);
-  border-radius: 50%;
-  box-shadow: 0 0 35px rgba(57,255,220,.24);
-}
-.modal-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  background: rgba(0,0,0,.62);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  display: none;
-  align-items: flex-start;
-  justify-content: center;
-  padding: calc(72px + env(safe-area-inset-top)) 16px 16px;
-}
-.modal-backdrop.open {
-  display: flex;
-  animation: fadeIn .2s ease both;
-}
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-.modal {
-  width: min(820px, 100%);
-  max-height: min(780px, calc(100vh - 120px));
-  overflow: auto;
-  border-radius: 30px;
-  background: rgba(9,14,25,.82);
-  border: 1px solid var(--line-strong);
-  box-shadow: 0 40px 140px rgba(0,0,0,.58);
-  padding: 16px;
-  animation: modalIn .34s cubic-bezier(.16,1,.3,1) both;
-}
-body.light .modal {
-  background: rgba(255,255,255,.88);
-}
-@keyframes modalIn {
-  from { transform: translateY(20px) scale(.98); opacity: 0; }
-  to { transform: translateY(0) scale(1); opacity: 1; }
-}
-.search-results {
-  display: grid;
-  gap: 10px;
-  margin-top: 12px;
-}
-.result-item {
-  padding: 14px;
-  border-radius: 18px;
-  background: rgba(255,255,255,.06);
-  border: 1px solid var(--line);
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  transition: background .2s ease, transform .2s ease;
-}
-.result-item:hover {
-  transform: translateY(-1px);
-  background: rgba(255,255,255,.09);
-}
-.result-icon {
-  width: 42px;
-  height: 42px;
-  border-radius: 15px;
-  display: grid;
-  place-items: center;
-  background: rgba(57,255,220,.12);
-  font-size: 22px;
-}
-.result-copy {
-  min-width: 0;
-  flex: 1;
-}
-.result-copy strong {
-  display: block;
-  font-size: 14px;
-  font-weight: 870;
-}
-.result-copy span {
-  display: block;
-  margin-top: 4px;
-  color: var(--muted);
-  font-size: 12px;
-  font-weight: 650;
-}
-.toast-zone {
-  position: fixed;
-  right: 18px;
-  bottom: 18px;
-  z-index: 200;
-  display: grid;
-  gap: 10px;
-  pointer-events: none;
-}
-.toast {
-  min-width: 260px;
-  padding: 14px 16px;
-  border-radius: 18px;
-  background: rgba(10,15,26,.86);
-  border: 1px solid rgba(57,255,220,.24);
-  box-shadow: var(--shadow);
-  color: var(--text);
-  font-size: 13px;
-  font-weight: 760;
-  backdrop-filter: blur(20px);
-  animation: toastIn .3s cubic-bezier(.16,1,.3,1) both;
-}
-body.light .toast {
-  background: rgba(255,255,255,.9);
-}
-@keyframes toastIn {
-  from { opacity: 0; transform: translateY(12px) scale(.98); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-.empty {
-  min-height: 260px;
-  display: grid;
-  place-items: center;
-  text-align: center;
-  padding: 38px;
-  border: 1px dashed var(--line-strong);
-  border-radius: var(--radius-lg);
-  background: rgba(255,255,255,.035);
-}
-.empty strong {
-  display: block;
-  font-size: 22px;
-  font-weight: 910;
-  letter-spacing: -.04em;
-}
-.empty span {
-  display: block;
-  max-width: 420px;
-  margin: 10px auto 0;
-  color: var(--muted);
-  font-size: 13px;
-  line-height: 1.5;
-}
-.mobile-nav {
-  display: none;
-}
-@media (max-width: 1180px) {
-  .topbar {
-    grid-template-columns: 1fr auto;
-  }
-  .brand {
-    min-width: 0;
-  }
-  .nav-tabs {
-    grid-column: 1 / -1;
-    order: 3;
-  }
-  .hero-grid, .dashboard-grid {
-    grid-template-columns: 1fr;
-  }
-  .metrics-grid, .cards-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .analytics-grid {
-    grid-template-columns: 1fr;
-  }
-}
-@media (max-width: 760px) {
-  .app {
-    padding: 12px 12px 96px;
-  }
-  .topbar {
-    gap: 10px;
-  }
-  .brand-mark {
-    width: 43px;
-    height: 43px;
-    border-radius: 16px;
-  }
-  .brand h1 {
-    font-size: 14px;
-  }
-  .brand p {
-    font-size: 10px;
-  }
-  .actions .pill-btn {
-    display: none;
-  }
-  .nav-tabs {
-    display: none;
-  }
-  .mobile-nav {
-    position: fixed;
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    left: 10px;
-    right: 10px;
-    bottom: 10px;
-    z-index: 80;
-    min-height: 72px;
-    padding: 7px;
-    border-radius: 26px;
-    border: 1px solid var(--line);
-    background: rgba(8,12,22,.78);
-    backdrop-filter: blur(26px);
-    -webkit-backdrop-filter: blur(26px);
-    box-shadow: var(--shadow);
-  }
-  body.light .mobile-nav {
-    background: rgba(255,255,255,.78);
-  }
-  .mobile-nav button {
-    border-radius: 20px;
-    background: transparent;
-    color: var(--muted);
-    display: grid;
-    place-items: center;
-    gap: 2px;
-    font-size: 18px;
-  }
-  .mobile-nav button span {
-    font-size: 9px;
-    font-weight: 850;
-  }
-  .mobile-nav button.active {
-    background: rgba(57,255,220,.13);
-    color: var(--accent);
-  }
-  .ticker {
-    border-radius: 22px;
-  }
-  .hero-card {
-    min-height: auto;
-    padding: 22px;
-  }
-  .hero-top {
-    display: block;
-    margin-bottom: 22px;
-  }
-  .hero-sub {
-    font-size: 13px;
-  }
-  .scoreboard {
-    grid-template-columns: 1fr;
-    text-align: center;
-  }
-  .score-team, .score-team.away {
-    justify-items: center;
-    text-align: center;
-  }
-  .score-core {
-    order: -1;
-  }
-  .toolbar {
-    grid-template-columns: 1fr;
-  }
-  .metrics-grid, .cards-grid {
-    grid-template-columns: 1fr;
-  }
-  .match-score-row {
-    grid-template-columns: 1fr;
-    text-align: left;
-  }
-  .mini-team.away {
-    justify-content: flex-start;
-    text-align: left;
-  }
-  .score-pill {
-    width: 100%;
-  }
-  .table-row {
-    grid-template-columns: 28px minmax(130px, 1fr) repeat(4, 42px);
-  }
-  .table-row .optional {
-    display: none;
-  }
-  .panel-header {
-    display: grid;
-  }
-  .toast-zone {
-    left: 12px;
-    right: 12px;
-    bottom: 92px;
-  }
-  .toast {
-    min-width: 0;
-  }
-}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>FIFA World Cup 2026™ | Nexus Hub</title>
+    <style>
+        /* ==========================================================================
+           1. TOKENS & VARIABLES
+           ========================================================================== */
+        :root {
+            /* Core Colors - Dark Theme (Default) */
+            --bg-base: #060608;
+            --bg-surface: rgba(20, 20, 24, 0.6);
+            --bg-surface-hover: rgba(35, 35, 42, 0.8);
+            --bg-panel: #0a0a0c;
+            --border-light: rgba(255, 255, 255, 0.08);
+            --border-highlight: rgba(212, 175, 55, 0.3);
+            
+            --text-primary: #ffffff;
+            --text-secondary: #9ca3af;
+            --text-tertiary: #6b7280;
+            
+            --accent-gold: #d4af37;
+            --accent-gold-glow: rgba(212, 175, 55, 0.15);
+            --accent-live: #ef4444;
+            --accent-live-glow: rgba(239, 68, 68, 0.2);
+            --accent-cyan: #06b6d4;
+            
+            /* Typography */
+            --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', 'Segoe UI', Roboto, sans-serif;
+            --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            
+            /* Spacing & Layout */
+            --sidebar-width: 80px;
+            --sidebar-width-expanded: 240px;
+            --topbar-height: 70px;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --radius-full: 9999px;
+            
+            /* Z-Index */
+            --z-bg: -1;
+            --z-base: 1;
+            --z-panel: 10;
+            --z-nav: 40;
+            --z-modal: 50;
+            --z-toast: 100;
+        }
+
+        [data-theme="light"] {
+            --bg-base: #f3f4f6;
+            --bg-surface: rgba(255, 255, 255, 0.8);
+            --bg-surface-hover: rgba(240, 240, 240, 0.9);
+            --bg-panel: #ffffff;
+            --border-light: rgba(0, 0, 0, 0.08);
+            --border-highlight: rgba(212, 175, 55, 0.5);
+            
+            --text-primary: #111827;
+            --text-secondary: #4b5563;
+            --text-tertiary: #9ca3af;
+            
+            --accent-gold-glow: rgba(212, 175, 55, 0.2);
+        }
+
+        /* ==========================================================================
+           2. RESET & BASE
+           ========================================================================== */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            height: 100%;
+            font-family: var(--font-sans);
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+
+        /* Animated Ambient Background */
+        body::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle at 50% 50%, var(--accent-gold-glow) 0%, transparent 40%),
+                        radial-gradient(circle at 80% 20%, rgba(6, 182, 212, 0.05) 0%, transparent 30%);
+            z-index: var(--z-bg);
+            animation: ambientDrift 30s linear infinite alternate;
+            pointer-events: none;
+        }
+        @keyframes ambientDrift {
+            0% { transform: rotate(0deg) translate(0, 0); }
+            100% { transform: rotate(5deg) translate(2%, 2%); }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: var(--radius-full); }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-tertiary); }
+
+        /* Typography Utilities */
+        .text-xs { font-size: 0.75rem; line-height: 1rem; }
+        .text-sm { font-size: 0.875rem; line-height: 1.25rem; }
+        .text-base { font-size: 1rem; line-height: 1.5rem; }
+        .text-lg { font-size: 1.125rem; line-height: 1.75rem; }
+        .text-xl { font-size: 1.25rem; line-height: 1.75rem; }
+        .text-2xl { font-size: 1.5rem; line-height: 2rem; }
+        .text-3xl { font-size: 1.875rem; line-height: 2.25rem; }
+        
+        .font-medium { font-weight: 500; }
+        .font-semibold { font-weight: 600; }
+        .font-bold { font-weight: 700; }
+        
+        .tabular-nums { font-variant-numeric: tabular-nums; }
+        .tracking-tight { letter-spacing: -0.025em; }
+        .tracking-wide { letter-spacing: 0.05em; }
+        .uppercase { text-transform: uppercase; }
+        
+        .text-gold { color: var(--accent-gold); }
+        .text-live { color: var(--accent-live); }
+        .text-secondary { color: var(--text-secondary); }
+
+        /* Buttons & Interactive */
+        button {
+            background: none; border: none; font: inherit; color: inherit; cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            outline: none;
+        }
+        button:active { transform: scale(0.97); }
+        
+        .btn-icon {
+            width: 40px; height: 40px; border-radius: var(--radius-full);
+            display: flex; align-items: center; justify-content: center;
+            background: var(--bg-surface); border: 1px solid var(--border-light);
+            color: var(--text-secondary);
+        }
+        .btn-icon:hover { background: var(--bg-surface-hover); color: var(--text-primary); border-color: var(--text-secondary); }
+
+        .glass-panel {
+            background: var(--bg-surface);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            box-shadow: 0 4px 24px -4px rgba(0,0,0,0.2);
+        }
+
+        /* ==========================================================================
+           3. LAYOUT ARCHITECTURE
+           ========================================================================== */
+        .app-container {
+            display: grid;
+            grid-template-columns: var(--sidebar-width) 1fr;
+            grid-template-rows: 100vh;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            grid-column: 1; grid-row: 1;
+            background: var(--bg-panel); border-right: 1px solid var(--border-light);
+            display: flex; flex-direction: column; align-items: center; padding: 24px 0;
+            z-index: var(--z-nav);
+            transition: width 0.3s ease;
+        }
+        .brand-logo { margin-bottom: 40px; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--accent-gold), #8a6d1c); border-radius: 12px; font-weight: bold; font-size: 20px; color: #000; box-shadow: 0 0 20px var(--accent-gold-glow); }
+        .nav-items { display: flex; flex-direction: column; gap: 16px; width: 100%; align-items: center; flex: 1; }
+        .nav-btn {
+            width: 52px; height: 52px; border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--text-tertiary); position: relative;
+        }
+        .nav-btn svg { width: 24px; height: 24px; stroke-width: 1.5; transition: all 0.3s; }
+        .nav-btn:hover { color: var(--text-primary); background: var(--bg-surface); }
+        .nav-btn.active { color: var(--accent-gold); background: var(--accent-gold-glow); border: 1px solid var(--border-highlight); }
+        .nav-btn.active svg { stroke-width: 2.5; filter: drop-shadow(0 0 8px var(--accent-gold)); }
+        
+        /* Main Content Area */
+        .main-stage {
+            grid-column: 2; grid-row: 1;
+            display: flex; flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Topbar */
+        .topbar {
+            height: var(--topbar-height); padding: 0 32px;
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid var(--border-light);
+            background: linear-gradient(to bottom, var(--bg-panel) 0%, transparent 100%);
+            backdrop-filter: blur(10px); z-index: var(--z-panel);
+        }
+        .topbar-left { display: flex; align-items: center; gap: 16px; }
+        .page-title { font-size: 1.25rem; font-weight: 700; letter-spacing: -0.5px; }
+        
+        .search-bar {
+            position: relative; width: 300px;
+        }
+        .search-bar svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; color: var(--text-tertiary); }
+        .search-input {
+            width: 100%; background: var(--bg-surface); border: 1px solid var(--border-light);
+            color: var(--text-primary); padding: 10px 16px 10px 36px; border-radius: var(--radius-full);
+            font-size: 0.875rem; outline: none; transition: all 0.2s;
+        }
+        .search-input:focus { border-color: var(--accent-gold); box-shadow: 0 0 0 3px var(--accent-gold-glow); }
+        
+        .topbar-right { display: flex; align-items: center; gap: 12px; }
+
+        /* View Container */
+        .view-container {
+            flex: 1; overflow-y: auto; overflow-x: hidden;
+            padding: 32px; scroll-behavior: smooth;
+        }
+        
+        .view { display: none; opacity: 0; transform: translateY(10px); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        .view.active { display: block; opacity: 1; transform: translateY(0); }
+
+        /* ==========================================================================
+           4. COMPONENTS
+           ========================================================================== */
+        
+        /* Live Indicator */
+        .live-pulse {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: var(--accent-live-glow); padding: 4px 10px; border-radius: var(--radius-full);
+            color: var(--accent-live); font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;
+        }
+        .live-dot {
+            width: 6px; height: 6px; border-radius: 50%; background: var(--accent-live);
+            box-shadow: 0 0 8px var(--accent-live); animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.5); } 100% { opacity: 1; transform: scale(1); } }
+
+        /* Match Card - Premium */
+        .match-card {
+            position: relative; overflow: hidden; padding: 20px;
+            display: flex; flex-direction: column; gap: 16px;
+            transition: transform 0.3s, border-color 0.3s;
+            cursor: pointer;
+        }
+        .match-card:hover { transform: translateY(-2px); border-color: var(--border-highlight); background: var(--bg-surface-hover); }
+        .match-card.is-live { border-color: rgba(239, 68, 68, 0.4); box-shadow: 0 0 30px rgba(239, 68, 68, 0.05); }
+        
+        .match-header { display: flex; justify-content: space-between; align-items: center; }
+        .match-meta { font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; }
+        
+        .match-teams { display: flex; justify-content: space-between; align-items: center; }
+        .team-block { display: flex; flex-direction: column; align-items: center; gap: 8px; flex: 1; }
+        .flag-lg { width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-light); box-shadow: inset 0 0 10px rgba(0,0,0,0.5); }
+        .team-code { font-size: 1.125rem; font-weight: 700; letter-spacing: 1px; }
+        
+        .match-score-block { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; }
+        .score-row { display: flex; align-items: center; gap: 12px; font-size: 2.5rem; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -2px; }
+        .score-sep { color: var(--text-tertiary); font-size: 1.5rem; font-weight: 400; }
+        
+        .match-timeline { height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; width: 100%; position: relative; margin-top: 8px; }
+        .match-progress { height: 100%; background: linear-gradient(90deg, var(--accent-live), var(--accent-gold)); transition: width 1s linear; }
+
+        /* Standings Table */
+        .table-wrap { width: 100%; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th { padding: 16px; font-size: 0.75rem; text-transform: uppercase; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--border-light); white-space: nowrap; }
+        td { padding: 16px; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 0.875rem; font-weight: 500; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: rgba(255,255,255,0.02); }
+        
+        .team-cell { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 1rem; }
+        .flag-sm { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; background: rgba(255,255,255,0.1); }
+        .pos-qual { width: 3px; height: 16px; border-radius: 2px; background: var(--accent-gold); margin-right: 8px; }
+        .pos-out { width: 3px; height: 16px; border-radius: 2px; background: transparent; margin-right: 8px; }
+        
+        .form-guide { display: flex; gap: 4px; }
+        .form-dot { width: 8px; height: 8px; border-radius: 50%; }
+        .form-w { background: #10b981; } .form-d { background: #6b7280; } .form-l { background: #ef4444; }
+
+        /* Bracket Components */
+        .bracket-container {
+            display: flex; gap: 40px; padding: 20px 0; overflow-x: auto;
+            align-items: center; min-height: 600px;
+        }
+        .bracket-round {
+            display: flex; flex-direction: column; justify-content: space-around; gap: 32px;
+            min-width: 240px; position: relative; height: 100%;
+        }
+        .bracket-match {
+            background: var(--bg-surface); border: 1px solid var(--border-light);
+            border-radius: var(--radius-md); padding: 12px; position: relative;
+            z-index: 2; backdrop-filter: blur(10px);
+        }
+        .bracket-match::after {
+            /* Connecting lines logic placeholder - usually complex CSS or SVG. Keeping it simple via borders */
+            content: ''; position: absolute; right: -20px; top: 50%; width: 20px; height: 1px; background: var(--border-light); z-index: 1;
+        }
+        .bracket-round:last-child .bracket-match::after { display: none; }
+        
+        .b-team-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; font-size: 0.875rem; font-weight: 600; }
+        .b-team-row:first-child { border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .b-winner { color: var(--accent-gold); }
+        
+        /* Dashboard Grid */
+        .dash-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px; }
+        .col-span-12 { grid-column: span 12; }
+        .col-span-8 { grid-column: span 12; }
+        .col-span-4 { grid-column: span 12; }
+        @media(min-width: 1024px) {
+            .col-span-8 { grid-column: span 8; }
+            .col-span-4 { grid-column: span 4; }
+            .col-span-6 { grid-column: span 6; }
+        }
+
+        /* Tabs */
+        .tabs { display: flex; gap: 8px; background: rgba(0,0,0,0.2); padding: 6px; border-radius: var(--radius-lg); width: max-content; margin-bottom: 24px; border: 1px solid var(--border-light); }
+        .tab-btn { padding: 8px 24px; border-radius: var(--radius-md); font-size: 0.875rem; font-weight: 600; color: var(--text-secondary); }
+        .tab-btn.active { background: var(--bg-panel); color: var(--text-primary); box-shadow: 0 2px 10px rgba(0,0,0,0.2); border: 1px solid var(--border-light); }
+
+        /* Compact Mode Tweaks */
+        .compact .match-card { padding: 12px; gap: 8px; }
+        .compact .flag-lg { width: 32px; height: 32px; font-size: 16px; }
+        .compact .score-row { font-size: 1.5rem; }
+        .compact td, .compact th { padding: 8px 12px; }
+
+        /* Mobile Adjustments */
+        @media(max-width: 768px) {
+            .app-container { grid-template-columns: 1fr; grid-template-rows: 1fr 70px; }
+            .sidebar { grid-column: 1; grid-row: 2; flex-direction: row; justify-content: space-around; padding: 0; height: 70px; border-right: none; border-top: 1px solid var(--border-light); z-index: 100; background: rgba(10,10,12,0.9); backdrop-filter: blur(20px); }
+            .brand-logo { display: none; }
+            .nav-items { flex-direction: row; justify-content: space-around; padding: 0 16px; }
+            .nav-btn { width: 44px; height: 44px; }
+            .main-stage { grid-column: 1; grid-row: 1; }
+            .view-container { padding: 16px; }
+            .topbar { padding: 0 16px; }
+            .search-bar { display: none; } /* Hide search on small mobile for space, or implement icon */
+        }
+
+        /* Cmd+K Modal */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(8px);
+            z-index: var(--z-modal); display: none; align-items: flex-start; justify-content: center; padding-top: 10vh;
+            opacity: 0; transition: opacity 0.2s;
+        }
+        .modal-overlay.active { display: flex; opacity: 1; }
+        .search-modal { width: 90%; max-width: 600px; background: var(--bg-panel); border: 1px solid var(--border-light); border-radius: var(--radius-lg); overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.4); transform: scale(0.95); transition: transform 0.2s; }
+        .modal-overlay.active .search-modal { transform: scale(1); }
+        .modal-input { width: 100%; padding: 24px; font-size: 1.25rem; background: transparent; border: none; color: var(--text-primary); outline: none; border-bottom: 1px solid var(--border-light); }
+        .modal-results { max-height: 400px; overflow-y: auto; padding: 12px; }
+        .result-item { padding: 12px 16px; display: flex; align-items: center; gap: 12px; border-radius: var(--radius-md); cursor: pointer; }
+        .result-item:hover { background: var(--bg-surface); }
+    </style>
 </head>
 <body>
-  <div class="app">
-    <header class="topbar">
-      <div class="brand" role="button" tabindex="0" onclick="setView('dashboard')">
-        <div class="brand-mark" aria-hidden="true"></div>
-        <div>
-          <h1>World Cup<br />Command</h1>
-          <p>2026 Intelligence</p>
-        </div>
-      </div>
-  <nav class="nav-tabs" aria-label="Primary">
-    <button class="nav-tab active" data-view="dashboard">Command</button>
-    <button class="nav-tab" data-view="matches">Live Center</button>
-    <button class="nav-tab" data-view="standings">Groups</button>
-    <button class="nav-tab" data-view="bracket">Bracket</button>
-    <button class="nav-tab" data-view="teams">Teams</button>
-    <button class="nav-tab" data-view="players">Players</button>
-    <button class="nav-tab" data-view="analytics">Analytics</button>
-    <button class="nav-tab" data-view="stadiums">Stadiums</button>
-    <button class="nav-tab" data-view="news">News</button>
-  </nav>
-  <div class="actions">
-    <button class="icon-btn" id="openSearch" title="Global search">⌘</button>
-    <button class="pill-btn" id="alertsBtn">Alerts</button>
-    <button class="icon-btn" id="compactBtn" title="Compact mode">◱</button>
-    <button class="icon-btn" id="themeBtn" title="Light / dark mode">☾</button>
-  </div>
-</header>
-<div class="ticker" aria-label="Live ticker">
-  <div class="ticker-badge"><span class="pulse-dot"></span> Live Desk</div>
-  <div class="ticker-track">
-    <div class="ticker-line" id="tickerLine"></div>
-  </div>
-</div>
-<section class="hero-grid" id="heroGrid">
-  <div class="hero-card">
-    <div class="hero-top">
-      <div>
-        <div class="eyebrow"><span class="pulse-dot"></span> Broadcast intelligence layer</div>
-        <h2 class="hero-title">Premium World Cup monitoring, rebuilt for speed.</h2>
-        <p class="hero-sub">Live scores, match momentum, standings, player production, venue intelligence, favorites, alerts, and analytics in a single cinematic control room.</p>
-        <div class="hero-command">
-          <button class="primary-btn" onclick="setView('matches')">Open Live Center</button>
-          <button class="ghost-btn" onclick="setView('analytics')">View Analytics</button>
-          <button class="ghost-btn" onclick="toggleFavoriteMatch(featuredMatch.id)">★ Favorite Feature Match</button>
-        </div>
-      </div>
-    </div>
-    <div class="scoreboard" id="featuredScoreboard"></div>
-  </div>
-  <div class="mini-stack">
-    <div class="intel-card">
-      <h3>Win Pressure</h3>
-      <div class="intel-value" id="pressureValue">72%</div>
-      <p>Model confidence is driven by possession tilt, territory, shot quality, and fatigue signals.</p>
-      <div class="momentum"><span id="momentumHome" style="width:58%"></span><span id="momentumAway" style="width:42%"></span></div>
-    </div>
-    <div class="intel-card">
-      <h3>Market Pulse</h3>
-      <div class="intel-value">+18.4</div>
-      <p>Public sentiment acceleration since kickoff. Alert threshold armed for favorites.</p>
-    </div>
-    <div class="intel-card">
-      <h3>Control Room</h3>
-      <div class="intel-value" id="controlRoomValue">24</div>
-      <p>Active live feeds, simulated alerts, monitored teams, and tactical signals.</p>
-    </div>
-  </div>
-</section>
-<div class="toolbar">
-  <div class="search-shell">
-    <span class="search-ico">⌕</span>
-    <input id="globalFilter" type="search" placeholder="Filter matches, teams, players, stadiums, news..." autocomplete="off" />
-    <span class="kbd">/</span>
-  </div>
-  <select id="statusFilter" aria-label="Status filter">
-    <option value="all">All statuses</option>
-    <option value="live">Live</option>
-    <option value="upcoming">Upcoming</option>
-    <option value="final">Final</option>
-  </select>
-  <select id="groupFilter" aria-label="Group filter">
-    <option value="all">All groups</option>
-  </select>
-  <button class="pill-btn" id="favoritesOnly">★ Favorites</button>
-</div>
-<main>
-  <section id="view-dashboard" class="section active">
-    <div class="metrics-grid" id="metricsGrid"></div>
-    <div class="dashboard-grid">
-      <div class="panel">
-        <div class="panel-header">
-          <div class="panel-title">
-            <h2>Live Match Center</h2>
-            <p>Broadcast-ready score cards with timelines, simulated feeds, and favorite monitoring.</p>
-          </div>
-          <div class="chip-row" id="quickChips"></div>
-        </div>
-        <div class="match-list" id="dashboardMatches"></div>
-      </div>
-      <div class="panel">
-        <div class="panel-header">
-          <div class="panel-title">
-            <h2>Signal Stack</h2>
-            <p>Mock API-ready intelligence modules for momentum, risk, xG, and alerting.</p>
-          </div>
-        </div>
-        <div class="analytics-grid" style="grid-template-columns:1fr">
-          <div class="viz-card">
-            <h3>Threat Radar</h3>
-            <p>Composite team profile across attack, control, pressing, set pieces, and transition speed.</p>
-            <div class="radar"></div>
-          </div>
-          <div class="viz-card">
-            <h3>Goal Flow</h3>
-            <p>Projected scoring intensity by match window.</p>
-            <div class="bar-chart" id="miniBarChart"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-  <section id="view-matches" class="section">
-    <div class="panel">
-      <div class="panel-header">
-        <div class="panel-title">
-          <h2>Live Center</h2>
-          <p>All fixtures, score controls, favorite tracking, status filters, and expandable timelines.</p>
-        </div>
-        <div class="chip-row">
-          <button class="chip active" data-status-chip="all">All</button>
-          <button class="chip" data-status-chip="live">Live</button>
-          <button class="chip" data-status-chip="upcoming">Upcoming</button>
-          <button class="chip" data-status-chip="final">Final</button>
-        </div>
-      </div>
-      <div class="match-list" id="allMatches"></div>
-    </div>
-  </section>
-  <section id="view-standings" class="section">
-    <div class="panel">
-      <div class="panel-header">
-        <div class="panel-title">
-          <h2>Group Standings</h2>
-          <p>Dynamic tables recalculate from mock match data and local score edits.</p>
-        </div>
-        <div class="chip-row" id="standingGroupChips"></div>
-      </div>
-      <div id="standingsGrid"></div>
-    </div>
-  </section>
-  <section id="view-bracket" class="section">
-    <div class="panel">
-      <div class="panel-header">
-        <div class="panel-title">
-          <h2>Knockout Bracket</h2>
-          <p>Luxury tournament tree with projected winners and API-ready placeholders.</p>
-        </div>
-      </div>
-      <div class="bracket-wrap">
-        <div class="bracket" id="bracketGrid"></div>
-      </div>
-    </div>
-  </section>
-  <section id="view-teams" class="section">
-    <div class="panel">
-      <div class="panel-header">
-        <div class="panel-title">
-          <h2>Team Pages</h2>
-          <p>Tap favorites, compare ratings, and open team-focused command profiles.</p>
-        </div>
-      </div>
-      <div class="cards-grid" id="teamsGrid"></div>
-    </div>
-  </section>
-  <section id="view-players" class="section">
-    <div class="panel">
-      <div class="panel-header">
-        <div class="panel-title">
-          <h2>Player Stats</h2>
-          <p>Golden Boot watch, creators, defensive anchors, and form signals.</p>
-        </div>
-        <div class="chip-row">
-          <button class="chip active" data-player-sort="goals">Goals</button>
-          <button class="chip" data-player-sort="assists">Assists</button>
-          <button class="chip" data-player-sort="rating">Rating</button>
-        </div>
-      </div>
-      <div class="cards-grid" id="playersGrid"></div>
-    </div>
-  </section>
-  <section id="view-analytics" class="section">
-    <div class="panel">
-      <div class="panel-header">
-        <div class="panel-title">
-          <h2>Advanced Analytics</h2>
-          <p>Mock intelligence widgets designed for easy replacement with live data providers.</p>
-        </div>
-      </div>
-      <div class="analytics-grid">
-        <div class="viz-card">
-          <h3>Contender Radar</h3>
-          <p>Blended model: attack, defense, rest, finishing variance, and tournament pedigree.</p>
-          <div class="radar"></div>
-        </div>
-        <div class="viz-card">
-          <h3>xG Velocity</h3>
-          <p>Expected goals generated over rolling match windows.</p>
-          <div class="bar-chart" id="xgBars"></div>
-        </div>
-        <div class="viz-card">
-          <h3>Global Heat</h3>
-          <p>Fan and media activity intensity by region and matchday.</p>
-          <div class="heat-map" id="heatMap"></div>
-        </div>
-      </div>
-      <div class="metrics-grid" style="margin-top:14px" id="analyticsMetrics"></div>
-    </div>
-  </section>
-  <section id="view-stadiums" class="section">
-    <div class="panel">
-      <div class="panel-header">
-        <div class="panel-title">
-          <h2>Stadiums</h2>
-          <p>Venue capacity, city, conditions, and match allocation intelligence.</p>
-        </div>
-      </div>
-      <div class="cards-grid" id="stadiumsGrid"></div>
-    </div>
-  </section>
-  <section id="view-news" class="section">
-    <div class="panel">
-      <div class="panel-header">
-        <div class="panel-title">
-          <h2>News Desk</h2>
-          <p>Premium editorial cards using mock headlines and simulated recency.</p>
-        </div>
-      </div>
-      <div class="cards-grid" id="newsGrid"></div>
-    </div>
-  </section>
-</main>
-  </div>
-  <nav class="mobile-nav" aria-label="Mobile primary">
-    <button class="active" data-mobile-view="dashboard">⌂<span>Home</span></button>
-    <button data-mobile-view="matches">●<span>Live</span></button>
-    <button data-mobile-view="standings">≡<span>Groups</span></button>
-    <button data-mobile-view="teams">◉<span>Teams</span></button>
-    <button data-mobile-view="news">✦<span>News</span></button>
-  </nav>
-  <div class="modal-backdrop" id="searchModal" role="dialog" aria-modal="true" aria-label="Global search">
-    <div class="modal">
-      <div class="search-shell">
-        <span class="search-ico">⌕</span>
-        <input id="modalSearchInput" type="search" placeholder="Search everything: teams, matches, players, venues..." autocomplete="off" />
-        <span class="kbd">Esc</span>
-      </div>
-      <div class="search-results" id="modalResults"></div>
-    </div>
-  </div>
-  <div class="toast-zone" id="toastZone"></div>
-  <script>
-    const FLAGS = {
-      Argentina:"🇦🇷", Brazil:"🇧🇷", France:"🇫🇷", England:"🏴", Spain:"🇪🇸", Portugal:"🇵🇹",
-      Germany:"🇩🇪", Netherlands:"🇳🇱", "United States":"🇺🇸", Mexico:"🇲🇽", Canada:"🇨🇦",
-      Japan:"🇯🇵", Morocco:"🇲🇦", Uruguay:"🇺🇾", Croatia:"🇭🇷", Senegal:"🇸🇳",
-      Colombia:"🇨🇴", Belgium:"🇧🇪", Ghana:"🇬🇭", "South Korea":"🇰🇷", Australia:"🇦🇺",
-      "South Africa":"🇿🇦", Switzerland:"🇨🇭", Türkiye:"🇹🇷"
-    };
-    const teams = [
-      {id:"arg", name:"Argentina", group:"A", coach:"Lionel Scaloni", rank:1, style:"Elite transition control", attack:94, defense:86, form:91},
-      {id:"mex", name:"Mexico", group:"A", coach:"Javier Aguirre", rank:14, style:"High-energy wide attacks", attack:78, defense:75, form:82},
-      {id:"bra", name:"Brazil", group:"B", coach:"Dorival Júnior", rank:5, style:"Explosive chance creation", attack:93, defense:82, form:88},
-      {id:"jpn", name:"Japan", group:"B", coach:"Hajime Moriyasu", rank:18, style:"Technical pressing machine", attack:81, defense:79, form:86},
-      {id:"fra", name:"France", group:"C", coach:"Didier Deschamps", rank:2, style:"Power, pace, verticality", attack:95, defense:88, form:90},
-      {id:"sen", name:"Senegal", group:"C", coach:"Aliou Cissé", rank:17, style:"Physical counter pressure", attack:80, defense:83, form:84},
-      {id:"eng", name:"England", group:"D", coach:"Thomas Tuchel", rank:4, style:"Structured elite creators", attack:90, defense:84, form:87},
-      {id:"usa", name:"United States", group:"D", coach:"Mauricio Pochettino", rank:13, style:"Athletic pressing lanes", attack:79, defense:77, form:81},
-      {id:"esp", name:"Spain", group:"E", coach:"Luis de la Fuente", rank:3, style:"Possession and overloads", attack:89, defense:87, form:92},
-      {id:"mor", name:"Morocco", group:"E", coach:"Walid Regragui", rank:12, style:"Compact elite defending", attack:78, defense:86, form:85},
-      {id:"por", name:"Portugal", group:"F", coach:"Roberto Martínez", rank:6, style:"Technical attacking depth", attack:91, defense:82, form:86},
-      {id:"ger", name:"Germany", group:"F", coach:"Julian Nagelsmann", rank:9, style:"Aggressive central control", attack:87, defense:80, form:83}
-    ];
-    const matchesSeed = [
-      {id:"m1", group:"A", stage:"Group", date:"Jun 11", time:"20:00", home:"Mexico", away:"Argentina", hs:1, as:1, status:"live", minute:64, stadium:"Estadio Azteca", odds:"ARG 42%", timeline:["12' Mexico counter chance saved","28' Argentina goal — Alvarez","51' Mexico equalizer from set piece","64' Momentum shifting to Argentina"]},
-      {id:"m2", group:"B", stage:"Group", date:"Jun 12", time:"17:00", home:"Brazil", away:"Japan", hs:2, as:0, status:"live", minute:72, stadium:"MetLife Stadium", odds:"BRA 81%", timeline:["09' Brazil high press wins corner","22' Brazil goal — Vinícius Jr.","48' Japan tactical switch","67' Brazil goal — Rodrygo"]},
-      {id:"m3", group:"C", stage:"Group", date:"Jun 13", time:"15:00", home:"France", away:"Senegal", hs:0, as:0, status:"upcoming", minute:null, stadium:"SoFi Stadium", odds:"FRA 58%", timeline:["Lineups pending","Weather: pristine","Model expects transition-heavy match"]},
-      {id:"m4", group:"D", stage:"Group", date:"Jun 14", time:"19:00", home:"United States", away:"England", hs:1, as:2, status:"final", minute:90, stadium:"AT&T Stadium", odds:"ENG 67%", timeline:["18' England goal — Kane","41' USA equalizer — Pulisic","78' England goal — Bellingham","90+4' Full time"]},
-      {id:"m5", group:"E", stage:"Group", date:"Jun 15", time:"21:00", home:"Spain", away:"Morocco", hs:3, as:2, status:"final", minute:90, stadium:"Mercedes-Benz Stadium", odds:"ESP 61%", timeline:["07' Spain goal","33' Morocco equalizer","59' Spain goal","74' Morocco equalizer","87' Spain winner"]},
-      {id:"m6", group:"F", stage:"Group", date:"Jun 16", time:"16:00", home:"Portugal", away:"Germany", hs:null, as:null, status:"upcoming", minute:null, stadium:"Levi's Stadium", odds:"POR 39%", timeline:["Projected sellout","Tactical watch: midfield compression","Alert armed for lineup release"]},
-      {id:"m7", group:"A", stage:"Group", date:"Jun 17", time:"14:00", home:"Argentina", away:"Canada", hs:null, as:null, status:"upcoming", minute:null, stadium:"BMO Field", odds:"ARG 74%", timeline:["Travel load favorable to Canada","Argentina rotation expected"]},
-      {id:"m8", group:"D", stage:"Group", date:"Jun 18", time:"18:00", home:"England", away:"Croatia", hs:null, as:null, status:"upcoming", minute:null, stadium:"Hard Rock Stadium", odds:"ENG 54%", timeline:["Veteran midfield matchup","Humidity risk elevated"]}
-    ];
-    const players = [
-      {name:"Kylian Mbappé", team:"France", pos:"FW", goals:4, assists:1, rating:9.1},
-      {name:"Lionel Messi", team:"Argentina", pos:"AM", goals:2, assists:4, rating:9.0},
-      {name:"Jude Bellingham", team:"England", pos:"MF", goals:3, assists:2, rating:8.8},
-      {name:"Vinícius Júnior", team:"Brazil", pos:"FW", goals:3, assists:1, rating:8.7},
-      {name:"Lamine Yamal", team:"Spain", pos:"RW", goals:1, assists:5, rating:8.6},
-      {name:"Christian Pulisic", team:"United States", pos:"LW", goals:2, assists:2, rating:8.3},
-      {name:"Bruno Fernandes", team:"Portugal", pos:"MF", goals:2, assists:3, rating:8.4},
-      {name:"Achraf Hakimi", team:"Morocco", pos:"RB", goals:1, assists:2, rating:8.2}
-    ];
-    const stadiums = [
-      {name:"MetLife Stadium", city:"New York / New Jersey", capacity:"82,500", matches:8, condition:"Cool evening, fast pitch"},
-      {name:"Estadio Azteca", city:"Mexico City", capacity:"87,523", matches:5, condition:"Altitude advantage active"},
-      {name:"SoFi Stadium", city:"Los Angeles", capacity:"70,240", matches:8, condition:"Controlled roof environment"},
-      {name:"AT&T Stadium", city:"Dallas", capacity:"80,000", matches:9, condition:"High scoring profile"},
-      {name:"Mercedes-Benz Stadium", city:"Atlanta", capacity:"71,000", matches:8, condition:"Rapid artificial surface"},
-      {name:"Levi's Stadium", city:"San Francisco Bay", capacity:"68,500", matches:6, condition:"Crosswind watch"}
-    ];
-    const news = [
-      {kicker:"Tactical", title:"France staff tests a faster left-channel buildout before Senegal opener.", body:"Training signals point to a more aggressive first phase and earlier vertical release.", time:"12 min ago"},
-      {kicker:"Market", title:"Argentina remains the most watched favorite across global fan sentiment.", body:"Command sentiment index shows a sharp lift after lineup leaks and travel confirmation.", time:"28 min ago"},
-      {kicker:"Medical", title:"England monitoring two starters after controlled recovery session.", body:"No escalation yet, but alerts are armed for official team sheet variance.", time:"41 min ago"},
-      {kicker:"Venue", title:"Mexico City altitude projected to materially affect second-half pressure.", body:"Models expect more substitutions and lower sprint density after minute sixty.", time:"1 hr ago"},
-      {kicker:"Analytics", title:"Brazil leads the tournament in simulated xG acceleration.", body:"The attacking model gives Brazil the highest chance of creating three big chances per match.", time:"2 hrs ago"},
-      {kicker:"Broadcast", title:"Opening night package features new augmented stadium graphics.", body:"Mock presentation layer inspired by Champions League and premium sports terminals.", time:"3 hrs ago"}
-    ];
-    const bracketRounds = [
-      {name:"Round of 16", games:[["Argentina","Japan"],["France","United States"],["Spain","Germany"],["England","Senegal"]]},
-      {name:"Quarterfinals", games:[["Argentina","France"],["Spain","England"]]},
-      {name:"Semifinals", games:[["France","Spain"],["Brazil","Portugal"]]},
-      {name:"Final", games:[["France","Brazil"]]},
-      {name:"Champion", games:[["France","World Cup"]]}
-    ];
-    const defaultState = {
-      view:"dashboard",
-      theme:"dark",
-      compact:false,
-      alerts:true,
-      favoritesOnly:false,
-      search:"",
-      status:"all",
-      group:"all",
-      expanded:{},
-      favoriteMatches:["m1"],
-      favoriteTeams:["arg","usa"],
-      matches:{}
-    };
-    const storeKey = "wc26-premium-command-v1";
-    let state = loadState();
-    let playerSort = "goals";
-    let featuredMatch = null;
-    function loadState() {
-      try {
-        return {...defaultState, ...JSON.parse(localStorage.getItem(storeKey) || "{}")};
-      } catch {
-        return {...defaultState};
-      }
-    }
-    function persist() {
-      localStorage.setItem(storeKey, JSON.stringify(state));
-    }
-    function currentMatches() {
-      return matchesSeed.map(m => ({...m, ...(state.matches[m.id] || {})}));
-    }
-    function saveMatch(match) {
-      state.matches[match.id] = {
-        hs: match.hs,
-        as: match.as,
-        status: match.status,
-        minute: match.minute
-      };
-      persist();
-    }
-    function teamByName(name) {
-      return teams.find(t => t.name === name) || {name, group:"—", attack:70, defense:70, form:70, rank:"—", style:"Tournament profile", coach:"—"};
-    }
-    function flag(name) {
-      return FLAGS[name] || "◌";
-    }
-    function toast(message) {
-      const zone = document.getElementById("toastZone");
-      const el = document.createElement("div");
-      el.className = "toast";
-      el.textContent = message;
-      zone.appendChild(el);
-      setTimeout(() => {
-        el.style.opacity = "0";
-        el.style.transform = "translateY(8px) scale(.98)";
-        setTimeout(() => el.remove(), 240);
-      }, 2400);
-    }
-    function applyShellState() {
-      document.body.classList.toggle("light", state.theme === "light");
-      document.body.classList.toggle("compact", state.compact);
-      document.getElementById("themeBtn").textContent = state.theme === "light" ? "☀" : "☾";
-      document.getElementById("compactBtn").classList.toggle("active", state.compact);
-      document.getElementById("alertsBtn").classList.toggle("active", state.alerts);
-      document.getElementById("favoritesOnly").classList.toggle("active", state.favoritesOnly);
-      document.getElementById("globalFilter").value = state.search;
-      document.getElementById("statusFilter").value = state.status;
-      document.getElementById("groupFilter").value = state.group;
-    }
-    function setView(view) {
-      state.view = view;
-      persist();
-      document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
-      const target = document.getElementById("view-" + view);
-      if (target) target.classList.add("active");
-      document.querySelectorAll(".nav-tab").forEach(b => b.classList.toggle("active", b.dataset.view === view));
-      document.querySelectorAll(".mobile-nav button").forEach(b => b.classList.toggle("active", b.dataset.mobileView === view));
-      window.scrollTo({top: 0, behavior: "smooth"});
-    }
-    function queryText() {
-      return state.search.trim().toLowerCase();
-    }
-    function passesMatchFilters(m) {
-      const q = queryText();
-      const isFav = state.favoriteMatches.includes(m.id) || state.favoriteTeams.includes(teamByName(m.home).id) || state.favoriteTeams.includes(teamByName(m.away).id);
-      if (state.favoritesOnly && !isFav) return false;
-      if (state.status !== "all" && m.status !== state.status) return false;
-      if (state.group !== "all" && m.group !== state.group) return false;
-      if (!q) return true;
-      return [m.home, m.away, m.group, m.stage, m.stadium, m.status, m.date].join(" ").toLowerCase().includes(q);
-    }
-    function globalFilterItems(items, fields) {
-      const q = queryText();
-      if (!q) return items;
-      return items.filter(item => fields.map(f => item[f]).join(" ").toLowerCase().includes(q));
-    }
-    function renderFeatured() {
-      const live = currentMatches().find(m => m.status === "live") || currentMatches()[0];
-      featuredMatch = live;
-      const home = teamByName(live.home);
-      const away = teamByName(live.away);
-      const hs = live.hs ?? "–";
-      const as = live.as ?? "–";
-      const homeMomentum = Math.max(34, Math.min(72, Math.round((home.attack + home.form - away.defense) / 2)));
-      const awayMomentum = 100 - homeMomentum;
-      document.getElementById("pressureValue").textContent = Math.max(homeMomentum, awayMomentum) + "%";
-      document.getElementById("momentumHome").style.width = homeMomentum + "%";
-      document.getElementById("momentumAway").style.width = awayMomentum + "%";
-      document.getElementById("featuredScoreboard").innerHTML = `
-        <div class="score-team">
-          <div class="flag-orb">${flag(live.home)}</div>
-          <h2>${live.home}</h2>
-          <p>${home.style}</p>
-        </div>
-        <div class="score-core">
-          <div class="score"><span>${hs}</span><span>:</span><span>${as}</span></div>
-          <div class="minute"><span class="pulse-dot"></span>${live.status === "live" ? live.minute + "' Live" : live.status}</div>
-        </div>
-        <div class="score-team away">
-          <div class="flag-orb">${flag(live.away)}</div>
-          <h2>${live.away}</h2>
-          <p>${away.style}</p>
-        </div>
-      `;
-    }
-    function renderTicker() {
-      const items = [
-        "<strong>Brazil</strong> xG velocity leads the slate",
-        "<strong>Argentina</strong> pressure model at 72%",
-        "<strong>France vs Senegal</strong> lineup alert armed",
-        "<strong>Mexico City</strong> altitude watch active",
-        "<strong>Favorites</strong> synced locally",
-        "<strong>API-ready</strong> vanilla data architecture"
-      ];
-      document.getElementById("tickerLine").innerHTML = [...items, ...items].map(x => `<span>${x}</span>`).join("");
-    }
-    function renderMetrics() {
-      const matches = currentMatches();
-      const live = matches.filter(m => m.status === "live").length;
-      const goals = matches.reduce((sum, m) => sum + (Number.isFinite(m.hs) ? m.hs : 0) + (Number.isFinite(m.as) ? m.as : 0), 0);
-      const favs = state.favoriteMatches.length + state.favoriteTeams.length;
-      const cards = [
-        ["Live Now", live, "Active broadcast feeds"],
-        ["Goals", goals, "Tournament command total"],
-        ["Favorites", favs, "Persistent tracked assets"],
-        ["Alerts", state.alerts ? "Armed" : "Muted", "Lineups, goals, pressure swings"]
-      ];
-      document.getElementById("metricsGrid").innerHTML = cards.map(([label, num, note]) => `
-        <div class="metric-card">
-          <div class="metric-label">${label}</div>
-          <div class="metric-number">${num}</div>
-          <div class="metric-note">${note}</div>
-        </div>
-      `).join("");
-      document.getElementById("analyticsMetrics").innerHTML = [
-        ["Avg xG", "2.84", "Across live simulations"],
-        ["Press Tilt", "+12%", "High block advantage"],
-        ["Upset Risk", "18%", "Model weighted"],
-        ["Fatigue Index", "64", "Travel-adjusted"]
-      ].map(([label, num, note]) => `
-        <div class="metric-card">
-          <div class="metric-label">${label}</div>
-          <div class="metric-number">${num}</div>
-          <div class="metric-note">${note}</div>
-        </div>
-      `).join("");
-    }
-    function statusMarkup(m) {
-      if (m.status === "live") return `<span class="status-pill live"><span class="pulse-dot"></span>${m.minute}' Live</span>`;
-      if (m.status === "final") return `<span class="status-pill">Full Time</span>`;
-      return `<span class="status-pill">${m.date} · ${m.time}</span>`;
-    }
-    function renderMatchCard(m) {
-      const fav = state.favoriteMatches.includes(m.id);
-      const expanded = !!state.expanded[m.id];
-      const score = m.status === "upcoming" ? "vs" : `${m.hs ?? 0} : ${m.as ?? 0}`;
-      return `
-        <article class="match-card ${m.status === "live" ? "live" : ""}" data-match-id="${m.id}">
-          <div class="match-meta-row">
-            <div class="match-label">${m.stage} · Group ${m.group} · ${m.stadium}</div>
-            ${statusMarkup(m)}
-          </div>
-          <div class="match-score-row">
-            <div class="mini-team">
-              <div class="mini-flag">${flag(m.home)}</div>
-              <div class="mini-team-name"><strong>${m.home}</strong><span>${teamByName(m.home).style}</span></div>
+
+    <div class="app-container" id="app">
+        <nav class="sidebar">
+            <div class="brand-logo">26</div>
+            <div class="nav-items">
+                <button class="nav-btn active" data-target="dashboard" title="Dashboard">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                </button>
+                <button class="nav-btn" data-target="matches" title="Matches">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                </button>
+                <button class="nav-btn" data-target="groups" title="Groups">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+                </button>
+                <button class="nav-btn" data-target="bracket" title="Knockouts">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 12h-4l-3-9H9"></path><path d="M22 12h-4l-3 9H9"></path><path d="M2 3h5v4H2z"></path><path d="M2 17h5v4H2z"></path></svg>
+                </button>
+                <button class="nav-btn" data-target="stats" title="Stats">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                </button>
             </div>
-            <button class="score-pill" onclick="toggleTimeline('${m.id}')">${score}</button>
-            <div class="mini-team away">
-              <div class="mini-team-name"><strong>${m.away}</strong><span>${teamByName(m.away).style}</span></div>
-              <div class="mini-flag">${flag(m.away)}</div>
-            </div>
-          </div>
-          <div class="match-footer">
-            <span>${m.odds} · ${m.date} ${m.time}</span>
-            <span>
-              <button class="ghost-btn" onclick="cycleMatch('${m.id}')">Simulate</button>
-              <button class="favorite ${fav ? "active" : ""}" onclick="toggleFavoriteMatch('${m.id}')">${fav ? "★" : "☆"}</button>
-            </span>
-          </div>
-          ${expanded ? `
-            <div class="timeline">
-              ${m.timeline.map((t, i) => `
-                <div class="timeline-row">
-                  <div class="timeline-min">${i === 0 ? "00" : (i * 18 + 7)}'</div>
-                  <div><strong>${t.split(" — ")[0]}</strong>${t.includes(" — ") ? " — " + t.split(" — ").slice(1).join(" — ") : ""}</div>
+        </nav>
+
+        <main class="main-stage">
+            <header class="topbar">
+                <div class="topbar-left">
+                    <h1 class="page-title" id="page-title">Dashboard</h1>
                 </div>
-              `).join("")}
+                <div class="search-bar" onclick="openSearchModal()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <input type="text" class="search-input" placeholder="Search teams, players... (Cmd+K)" readonly>
+                </div>
+                <div class="topbar-right">
+                    <button class="btn-icon" id="toggle-compact" title="Toggle Compact Mode">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"><path d="M4 14h6v6H4zM14 14h6v6h-6zM4 4h6v6H4zM14 4h6v6h-6z"></path></svg>
+                    </button>
+                    <button class="btn-icon" id="toggle-theme" title="Toggle Theme">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                    </button>
+                </div>
+            </header>
+
+            <div class="view-container" id="view-container">
+                
+                <div id="view-dashboard" class="view active">
+                    <div class="dash-grid">
+                        
+                        <div class="col-span-8">
+                            <h2 class="text-sm uppercase text-secondary font-bold tracking-wide mb-4">Featured Live</h2>
+                            <div class="glass-panel match-card is-live" style="padding: 32px;" id="hero-match">
+                                </div>
+                        </div>
+
+                        <div class="col-span-4">
+                            <h2 class="text-sm uppercase text-secondary font-bold tracking-wide mb-4">Intelligence Feed</h2>
+                            <div class="glass-panel" style="padding: 20px; display: flex; flex-direction: column; gap: 16px; height: 100%;">
+                                <div style="display:flex; gap:12px; border-bottom:1px solid var(--border-light); padding-bottom:12px;">
+                                    <div class="text-live">⚡</div>
+                                    <div><p class="text-sm font-bold">Mbappé ruled out</p><p class="text-xs text-secondary mt-1">Fractured metatarsal in training.</p></div>
+                                </div>
+                                <div style="display:flex; gap:12px; border-bottom:1px solid var(--border-light); padding-bottom:12px;">
+                                    <div class="text-gold">📈</div>
+                                    <div><p class="text-sm font-bold">USA Win Probability</p><p class="text-xs text-secondary mt-1">Surges to 68% after tactical shift.</p></div>
+                                </div>
+                                <div style="display:flex; gap:12px;">
+                                    <div class="text-cyan">🏟️</div>
+                                    <div><p class="text-sm font-bold">Azteca Weather Alert</p><p class="text-xs text-secondary mt-1">Heavy rain expected for MEX v GER.</p></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-span-12">
+                            <h2 class="text-sm uppercase text-secondary font-bold tracking-wide mb-4 mt-4">Group of Death (Group F)</h2>
+                            <div class="glass-panel table-wrap" id="dash-standings">
+                                </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div id="view-matches" class="view">
+                    <div class="tabs">
+                        <button class="tab-btn active" data-filter="all">All Matches</button>
+                        <button class="tab-btn" data-filter="live">Live Now <span class="live-dot" style="display:inline-block; margin-left:4px;"></span></button>
+                        <button class="tab-btn" data-filter="upcoming">Upcoming</button>
+                        <button class="tab-btn" data-filter="finished">Results</button>
+                    </div>
+                    <div class="dash-grid" id="matches-grid">
+                        </div>
+                </div>
+
+                <div id="view-groups" class="view">
+                    <div class="dash-grid" id="groups-grid">
+                        </div>
+                </div>
+
+                <div id="view-bracket" class="view">
+                    <div class="glass-panel" style="padding: 24px; overflow-x: auto;">
+                        <div class="bracket-container" id="bracket-container">
+                            </div>
+                    </div>
+                </div>
+
+                <div id="view-stats" class="view">
+                    <div class="dash-grid">
+                        <div class="col-span-6 glass-panel" style="padding:24px;">
+                            <h3 class="text-lg font-bold mb-6 border-bottom border-light pb-4">Top Scorers (Golden Boot)</h3>
+                            <div id="stats-scorers" style="display:flex; flex-direction:column; gap:16px;"></div>
+                        </div>
+                        <div class="col-span-6 glass-panel" style="padding:24px;">
+                            <h3 class="text-lg font-bold mb-6 border-bottom border-light pb-4">Team xG Leaders</h3>
+                            <div id="stats-xg" style="display:flex; flex-direction:column; gap:16px;"></div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
-          ` : ""}
-        </article>
-      `;
-    }
-    function renderMatches() {
-      const filtered = currentMatches().filter(passesMatchFilters);
-      const dashboard = filtered.slice(0, 4);
-      document.getElementById("dashboardMatches").innerHTML = dashboard.length ? dashboard.map(renderMatchCard).join("") : emptyState("No command matches", "Try clearing filters or turning off favorites-only mode.");
-      document.getElementById("allMatches").innerHTML = filtered.length ? filtered.map(renderMatchCard).join("") : emptyState("No matches found", "Adjust search, group, status, or favorite filters.");
-      document.getElementById("quickChips").innerHTML = ["all","live","upcoming","final"].map(s => `
-        <button class="chip ${state.status === s ? "active" : ""}" onclick="setStatus('${s}')">${s[0].toUpperCase() + s.slice(1)}</button>
-      `).join("");
-    }
-    function emptyState(title, copy) {
-      return `<div class="empty"><div><strong>${title}</strong><span>${copy}</span></div></div>`;
-    }
-    function setStatus(status) {
-      state.status = status;
-      persist();
-      renderAll();
-    }
-    function toggleTimeline(id) {
-      state.expanded[id] = !state.expanded[id];
-      persist();
-      renderMatches();
-    }
-    function cycleMatch(id) {
-      const m = currentMatches().find(x => x.id === id);
-      if (!m) return;
-      if (m.status === "upcoming") {
-        m.status = "live"; m.minute = 12; m.hs = 0; m.as = 0;
-        toast(`${m.home} vs ${m.away} is now live`);
-      } else if (m.status === "live") {
-        const homeGoal = Math.random() > .48;
-        if (homeGoal) m.hs = (m.hs || 0) + 1;
-        else m.as = (m.as || 0) + 1;
-        m.minute = Math.min(89, (m.minute || 1) + Math.floor(6 + Math.random() * 13));
-        m.timeline = [...m.timeline, `${m.minute}' ${homeGoal ? m.home : m.away} goal signal`];
-        toast(`Goal simulation: ${homeGoal ? m.home : m.away}`);
-        if (m.minute > 82) m.status = "final";
-      } else {
-        m.status = "upcoming"; m.minute = null; m.hs = null; m.as = null;
-        toast("Match reset to upcoming");
-      }
-      saveMatch(m);
-      renderAll();
-    }
-    function toggleFavoriteMatch(id) {
-      const i = state.favoriteMatches.indexOf(id);
-      if (i >= 0) {
-        state.favoriteMatches.splice(i, 1);
-        toast("Match removed from favorites");
-      } else {
-        state.favoriteMatches.push(id);
-        toast("Match added to favorites");
-      }
-      persist();
-      renderAll();
-    }
-    function toggleFavoriteTeam(id) {
-      const i = state.favoriteTeams.indexOf(id);
-      if (i >= 0) {
-        state.favoriteTeams.splice(i, 1);
-        toast("Team removed from favorites");
-      } else {
-        state.favoriteTeams.push(id);
-        toast("Team added to favorites");
-      }
-      persist();
-      renderAll();
-    }
-    function standingsForGroup(group) {
-      const groupTeams = teams.filter(t => t.group === group);
-      const table = Object.fromEntries(groupTeams.map(t => [t.name, {team:t, p:0,w:0,d:0,l:0,gf:0,ga:0,gd:0,pts:0,form:[]}]));
-      currentMatches().filter(m => m.group === group && m.status === "final").forEach(m => {
-        if (!table[m.home] || !table[m.away]) return;
-        const h = table[m.home], a = table[m.away];
-        h.p++; a.p++; h.gf += m.hs; h.ga += m.as; a.gf += m.as; a.ga += m.hs;
-        if (m.hs > m.as) { h.w++; a.l++; h.pts += 3; h.form.push("w"); a.form.push("l"); }
-        else if (m.as > m.hs) { a.w++; h.l++; a.pts += 3; a.form.push("w"); h.form.push("l"); }
-        else { h.d++; a.d++; h.pts++; a.pts++; h.form.push("d"); a.form.push("d"); }
-        h.gd = h.gf - h.ga; a.gd = a.gf - a.ga;
-      });
-      Object.values(table).forEach(r => {
-        while (r.form.length < 3) r.form.push(["w","d","l"][Math.floor(Math.random()*3)]);
-        r.form = r.form.slice(-3);
-      });
-      return Object.values(table).sort((a,b) => b.pts - a.pts || b.gd - a.gd || b.gf - a.gf || a.team.rank - b.team.rank);
-    }
-    function renderStandings() {
-      const groups = [...new Set(teams.map(t => t.group))];
-      const selected = state.group === "all" ? groups : [state.group];
-      document.getElementById("standingGroupChips").innerHTML = ["all", ...groups].map(g => `
-        <button class="chip ${state.group === g ? "active" : ""}" onclick="setGroup('${g}')">${g === "all" ? "All Groups" : "Group " + g}</button>
-      `).join("");
-      document.getElementById("standingsGrid").innerHTML = selected.map(group => {
-        const rows = standingsForGroup(group).map((r, idx) => `
-          <div class="table-row">
-            <div class="num">${idx + 1}</div>
-            <div class="club"><span>${flag(r.team.name)}</span><span>${r.team.name}</span></div>
-            <div class="num">${r.p}</div>
-            <div class="num">${r.w}</div>
-            <div class="num optional">${r.d}</div>
-            <div class="num optional">${r.gd > 0 ? "+" : ""}${r.gd}</div>
-            <div class="num pts">${r.pts}</div>
-            <div class="form">${r.form.map(x => `<i class="${x}">${x.toUpperCase()}</i>`).join("")}</div>
-          </div>
-        `).join("");
-        return `
-          <div style="margin-bottom:18px">
-            <div class="panel-header" style="margin:0 0 8px">
-              <div class="panel-title"><h2 style="font-size:22px">Group ${group}</h2></div>
-            </div>
-            <div class="table">
-              <div class="table-row head">
-                <div>#</div><div>Team</div><div class="num">P</div><div class="num">W</div><div class="num optional">D</div><div class="num optional">GD</div><div class="num">Pts</div><div class="num">Form</div>
-              </div>
-              ${rows}
-            </div>
-          </div>
-        `;
-      }).join("");
-    }
-    function setGroup(group) {
-      state.group = group;
-      persist();
-      renderAll();
-    }
-    function renderBracket() {
-      document.getElementById("bracketGrid").innerHTML = bracketRounds.map(round => `
-        <div class="round">
-          <h3>${round.name}</h3>
-          ${round.games.map((g, idx) => `
-            <div class="bracket-node">
-              <div class="bracket-team-row ${idx % 2 === 0 ? "winner" : ""}"><span>${flag(g[0])} ${g[0]}</span><strong>${round.name === "Champion" ? "★" : Math.floor(Math.random()*3)}</strong></div>
-              <div class="bracket-team-row"><span>${flag(g[1])} ${g[1]}</span><strong>${round.name === "Champion" ? "" : Math.floor(Math.random()*3)}</strong></div>
-            </div>
-          `).join("")}
+        </main>
+    </div>
+
+    <div class="modal-overlay" id="search-modal-overlay">
+        <div class="search-modal">
+            <input type="text" class="modal-input" id="global-search" placeholder="Type a team, player, or group..." autocomplete="off">
+            <div class="modal-results" id="search-results">
+                </div>
         </div>
-      `).join("");
-    }
-    function renderTeams() {
-      const filtered = globalFilterItems(teams, ["name","group","coach","style"]);
-      document.getElementById("teamsGrid").innerHTML = filtered.length ? filtered.map(t => {
-        const fav = state.favoriteTeams.includes(t.id);
-        return `
-          <article class="team-card">
-            <div class="card-top">
-              <div class="big-flag">${flag(t.name)}</div>
-              <button class="favorite ${fav ? "active" : ""}" onclick="toggleFavoriteTeam('${t.id}')">${fav ? "★" : "☆"}</button>
-            </div>
-            <h3>${t.name}</h3>
-            <p>Group ${t.group} · Rank ${t.rank} · ${t.coach}<br>${t.style}</p>
-            <div class="rating-bars">
-              ${barRow("Attack", t.attack)}
-              ${barRow("Defense", t.defense)}
-              ${barRow("Form", t.form)}
-            </div>
-          </article>
-        `;
-      }).join("") : emptyState("No teams found", "Search by nation, coach, group, or style.");
-    }
-    function barRow(label, value) {
-      return `<div class="bar-row"><span>${label}</span><div class="bar"><span style="width:${value}%"></span></div><strong>${value}</strong></div>`;
-    }
-    function renderPlayers() {
-      const filtered = globalFilterItems(players, ["name","team","pos"]).sort((a,b) => b[playerSort] - a[playerSort]);
-      document.getElementById("playersGrid").innerHTML = filtered.length ? filtered.map(p => `
-        <article class="player-card">
-          <div class="card-top">
-            <div class="avatar">${p.name.split(" ").map(x => x[0]).slice(0,2).join("")}</div>
-            <div class="status-pill">${p.pos}</div>
-          </div>
-          <h3>${p.name}</h3>
-          <p>${flag(p.team)} ${p.team} · Command rating ${p.rating}</p>
-          <div class="stat-grid">
-            <div class="stat-box"><strong>${p.goals}</strong><span>Goals</span></div>
-            <div class="stat-box"><strong>${p.assists}</strong><span>Assists</span></div>
-            <div class="stat-box"><strong>${p.rating}</strong><span>Rating</span></div>
-          </div>
-        </article>
-      `).join("") : emptyState("No players found", "Search by player, team, or position.");
-    }
-    function renderAnalyticsVisuals() {
-      document.getElementById("miniBarChart").innerHTML = [44,66,52,81,70,92,64].map((h,i) => `<i style="height:${h}%; animation-delay:${i*45}ms"></i>`).join("");
-      document.getElementById("xgBars").innerHTML = [48,72,59,84,66,93,78].map((h,i) => `<i style="height:${h}%; animation-delay:${i*45}ms"></i>`).join("");
-      document.getElementById("heatMap").innerHTML = Array.from({length:72}, (_,i) => `<i class="hot${(i*7 + i%5)%5}"></i>`).join("");
-    }
-    function renderStadiums() {
-      const filtered = globalFilterItems(stadiums, ["name","city","condition"]);
-      document.getElementById("stadiumsGrid").innerHTML = filtered.length ? filtered.map(s => `
-        <article class="stadium-card">
-          <div class="stadium-visual"></div>
-          <h3>${s.name}</h3>
-          <p>${s.city}<br>Capacity ${s.capacity} · ${s.matches} matches<br>${s.condition}</p>
-          <div class="stat-grid">
-            <div class="stat-box"><strong>${s.matches}</strong><span>Games</span></div>
-            <div class="stat-box"><strong>${s.capacity.split(",")[0]}</strong><span>Cap</span></div>
-            <div class="stat-box"><strong>API</strong><span>Ready</span></div>
-          </div>
-        </article>
-      `).join("") : emptyState("No stadiums found", "Search by venue, city, or condition.");
-    }
-    function renderNews() {
-      const filtered = globalFilterItems(news, ["kicker","title","body","time"]);
-      document.getElementById("newsGrid").innerHTML = filtered.length ? filtered.map(n => `
-        <article class="news-card">
-          <div>
-            <span class="news-kicker">${n.kicker}</span>
-            <h3>${n.title}</h3>
-            <p>${n.body}</p>
-          </div>
-          <div class="news-meta">${n.time} · Command Newswire</div>
-        </article>
-      `).join("") : emptyState("No news found", "Try a different search term.");
-    }
-    function renderGroupSelect() {
-      const select = document.getElementById("groupFilter");
-      const current = select.value || state.group;
-      select.innerHTML = `<option value="all">All groups</option>` + [...new Set(teams.map(t => t.group))].map(g => `<option value="${g}">Group ${g}</option>`).join("");
-      select.value = current;
-    }
-    function renderModalResults() {
-      const q = document.getElementById("modalSearchInput").value.trim().toLowerCase();
-      const results = [];
-      if (q) {
-        teams.forEach(t => {
-          if ([t.name,t.coach,t.style,t.group].join(" ").toLowerCase().includes(q)) {
-            results.push({icon:flag(t.name), title:t.name, sub:`Team · Group ${t.group} · ${t.style}`, view:"teams"});
-          }
-        });
-        currentMatches().forEach(m => {
-          if ([m.home,m.away,m.stadium,m.group,m.status].join(" ").toLowerCase().includes(q)) {
-            results.push({icon:"●", title:`${m.home} vs ${m.away}`, sub:`Match · ${m.status} · ${m.stadium}`, view:"matches"});
-          }
-        });
-        players.forEach(p => {
-          if ([p.name,p.team,p.pos].join(" ").toLowerCase().includes(q)) {
-            results.push({icon:"◉", title:p.name, sub:`Player · ${p.team} · ${p.goals} goals`, view:"players"});
-          }
-        });
-        stadiums.forEach(s => {
-          if ([s.name,s.city,s.condition].join(" ").toLowerCase().includes(q)) {
-            results.push({icon:"⌂", title:s.name, sub:`Stadium · ${s.city}`, view:"stadiums"});
-          }
-        });
-      }
-      document.getElementById("modalResults").innerHTML = results.length ? results.slice(0, 12).map(r => `
-        <button class="result-item" onclick="chooseSearchResult('${r.view}', '${r.title.replace(/'/g,"\\'")}')">
-          <div class="result-icon">${r.icon}</div>
-          <div class="result-copy"><strong>${r.title}</strong><span>${r.sub}</span></div>
-          <div>→</div>
-        </button>
-      `).join("") : emptyState(q ? "No results" : "Start typing", q ? "No matching command-center assets found." : "Search across matches, teams, players, venues, and news.");
-    }
-    function chooseSearchResult(view, title) {
-      state.search = title.split(" vs ")[0];
-      closeSearchModal();
-      setView(view);
-      renderAll();
-    }
-    function openSearchModal() {
-      const modal = document.getElementById("searchModal");
-      modal.classList.add("open");
-      const input = document.getElementById("modalSearchInput");
-      input.value = state.search;
-      setTimeout(() => input.focus(), 40);
-      renderModalResults();
-    }
-    function closeSearchModal() {
-      document.getElementById("searchModal").classList.remove("open");
-    }
-    function renderAll() {
-      applyShellState();
-      renderFeatured();
-      renderMetrics();
-      renderMatches();
-      renderStandings();
-      renderBracket();
-      renderTeams();
-      renderPlayers();
-      renderAnalyticsVisuals();
-      renderStadiums();
-      renderNews();
-      document.getElementById("controlRoomValue").textContent = currentMatches().filter(m => m.status === "live").length * 7 + teams.length;
-    }
-    function initEvents() {
-      document.querySelectorAll(".nav-tab").forEach(btn => btn.addEventListener("click", () => setView(btn.dataset.view)));
-      document.querySelectorAll(".mobile-nav button").forEach(btn => btn.addEventListener("click", () => setView(btn.dataset.mobileView)));
-      document.getElementById("themeBtn").addEventListener("click", () => {
-        state.theme = state.theme === "dark" ? "light" : "dark";
-        persist();
-        renderAll();
-        toast(`${state.theme === "dark" ? "Dark" : "Light"} mode enabled`);
-      });
-      document.getElementById("compactBtn").addEventListener("click", () => {
-        state.compact = !state.compact;
-        persist();
-        renderAll();
-        toast(state.compact ? "Compact mode enabled" : "Comfort mode enabled");
-      });
-      document.getElementById("alertsBtn").addEventListener("click", () => {
-        state.alerts = !state.alerts;
-        persist();
-        renderAll();
-        toast(state.alerts ? "Alerts armed" : "Alerts muted");
-      });
-      document.getElementById("favoritesOnly").addEventListener("click", () => {
-        state.favoritesOnly = !state.favoritesOnly;
-        persist();
-        renderAll();
-      });
-      document.getElementById("globalFilter").addEventListener("input", e => {
-        state.search = e.target.value;
-        persist();
-        renderAll();
-      });
-      document.getElementById("statusFilter").addEventListener("change", e => {
-        state.status = e.target.value;
-        persist();
-        renderAll();
-      });
-      document.getElementById("groupFilter").addEventListener("change", e => {
-        state.group = e.target.value;
-        persist();
-        renderAll();
-      });
-      document.querySelectorAll("[data-status-chip]").forEach(btn => btn.addEventListener("click", () => setStatus(btn.dataset.statusChip)));
-      document.querySelectorAll("[data-player-sort]").forEach(btn => btn.addEventListener("click", () => {
-        playerSort = btn.dataset.playerSort;
-        document.querySelectorAll("[data-player-sort]").forEach(b => b.classList.toggle("active", b === btn));
-        renderPlayers();
-      }));
-      document.getElementById("openSearch").addEventListener("click", openSearchModal);
-      document.getElementById("modalSearchInput").addEventListener("input", renderModalResults);
-      document.getElementById("searchModal").addEventListener("click", e => {
-        if (e.target.id === "searchModal") closeSearchModal();
-      });
-      window.addEventListener("keydown", e => {
-        const typing = ["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement.tagName);
-        if (e.key === "/" && !typing) {
-          e.preventDefault();
-          openSearchModal();
+    </div>
+
+    <script>
+        /* ==========================================================================
+           DATA LAYER (MOCK ENGINE)
+           ========================================================================== */
+        const FLAGS = {
+            "ARG": "🇦🇷", "BRA": "🇧🇷", "FRA": "🇫🇷", "ENG": "🏴", "ESP": "🇪🇸", "GER": "🇩🇪",
+            "POR": "🇵🇹", "NED": "🇳🇱", "ITA": "🇮🇹", "BEL": "🇧🇪", "USA": "🇺🇸", "MEX": "🇲🇽",
+            "CAN": "🇨🇦", "JPN": "🇯🇵", "KOR": "🇰🇷", "MAR": "🇲🇦", "SEN": "🇸🇳", "URU": "🇺🇾"
+        };
+
+        const GROUPS_DATA = {
+            "A": ["MEX", "ITA", "SEN", "KOR"],
+            "B": ["CAN", "ENG", "MAR", "JPN"],
+            "F": ["FRA", "GER", "URU", "USA"] // Group of Death for demo
+        };
+
+        let MATCHES = [
+            { id: 1, group: 'A', home: 'MEX', away: 'ITA', status: 'FT', hs: 2, as: 1, min: 'FT', date: '2026-06-11' },
+            { id: 2, group: 'A', home: 'SEN', away: 'KOR', status: 'FT', hs: 0, as: 0, min: 'FT', date: '2026-06-12' },
+            { id: 3, group: 'F', home: 'FRA', away: 'GER', status: 'LIVE', hs: 1, as: 1, min: '67', date: '2026-06-15' },
+            { id: 4, group: 'F', home: 'USA', away: 'URU', status: 'LIVE', hs: 2, as: 0, min: '72', date: '2026-06-15' },
+            { id: 5, group: 'B', home: 'ENG', away: 'CAN', status: 'UPCOMING', hs: null, as: null, min: null, date: '2026-06-16', time: '15:00' },
+            { id: 6, group: 'B', home: 'MAR', away: 'JPN', status: 'UPCOMING', hs: null, as: null, min: null, date: '2026-06-16', time: '18:00' }
+        ];
+
+        const STATS_PLAYERS = [
+            { name: "K. Mbappé", team: "FRA", goals: 4 },
+            { name: "V. Osimhen", team: "NGA", goals: 3 },
+            { name: "L. Messi", team: "ARG", goals: 2 },
+            { name: "J. Bellingham", team: "ENG", goals: 2 }
+        ];
+
+        /* ==========================================================================
+           STATE MANAGEMENT
+           ========================================================================== */
+        const state = {
+            currentView: 'dashboard',
+            theme: localStorage.getItem('wc26-theme') || 'dark',
+            compact: localStorage.getItem('wc26-compact') === 'true',
+            matchFilter: 'all'
+        };
+
+        /* ==========================================================================
+           CORE LOGIC & RENDERING
+           ========================================================================== */
+        
+        function initApp() {
+            applyTheme(state.theme);
+            applyCompact(state.compact);
+            bindEvents();
+            navigate(state.currentView);
+            startLiveEngine();
         }
-        if (e.key === "Escape") closeSearchModal();
-      });
-    }
-    function boot() {
-      renderGroupSelect();
-      renderTicker();
-      initEvents();
-      setView(state.view || "dashboard");
-      renderAll();
-      setInterval(() => {
-        const live = currentMatches().filter(m => m.status === "live");
-        if (!live.length) return;
-        const m = live[Math.floor(Math.random() * live.length)];
-        m.minute = Math.min(90, (m.minute || 1) + 1);
-        saveMatch(m);
-        renderFeatured();
-        renderMatches();
-        if (state.alerts && Math.random() > .82) toast(`Live signal: ${m.home} vs ${m.away} pressure swing`);
-      }, 9000);
-    }
-    boot();
-  </script>
+
+        function bindEvents() {
+            // Navigation
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+                    e.currentTarget.classList.add('active');
+                    navigate(e.currentTarget.dataset.target);
+                });
+            });
+
+            // Toggles
+            document.getElementById('toggle-theme').addEventListener('click', () => {
+                state.theme = state.theme === 'dark' ? 'light' : 'dark';
+                localStorage.setItem('wc26-theme', state.theme);
+                applyTheme(state.theme);
+            });
+            document.getElementById('toggle-compact').addEventListener('click', () => {
+                state.compact = !state.compact;
+                localStorage.setItem('wc26-compact', state.compact);
+                applyCompact(state.compact);
+            });
+
+            // Match Tabs
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    e.currentTarget.classList.add('active');
+                    state.matchFilter = e.currentTarget.dataset.filter;
+                    renderMatchesView();
+                });
+            });
+
+            // Search Modal
+            const overlay = document.getElementById('search-modal-overlay');
+            const searchInput = document.getElementById('global-search');
+            
+            document.addEventListener('keydown', (e) => {
+                if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                    e.preventDefault();
+                    openSearchModal();
+                }
+                if (e.key === 'Escape') overlay.classList.remove('active');
+            });
+            
+            overlay.addEventListener('click', (e) => {
+                if(e.target === overlay) overlay.classList.remove('active');
+            });
+
+            searchInput.addEventListener('input', (e) => handleSearch(e.target.value));
+        }
+
+        function navigate(viewId) {
+            state.currentView = viewId;
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById(`view-${viewId}`).classList.add('active');
+            
+            const titles = { 'dashboard': 'Dashboard', 'matches': 'Match Center', 'groups': 'Group Stage', 'bracket': 'Knockouts', 'stats': 'Advanced Stats' };
+            document.getElementById('page-title').innerText = titles[viewId];
+
+            // Render specific views on demand
+            if (viewId === 'dashboard') renderDashboard();
+            if (viewId === 'matches') renderMatchesView();
+            if (viewId === 'groups') renderGroupsView();
+            if (viewId === 'bracket') renderBracketView();
+            if (viewId === 'stats') renderStatsView();
+        }
+
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+        }
+
+        function applyCompact(isCompact) {
+            if(isCompact) document.getElementById('app').classList.add('compact');
+            else document.getElementById('app').classList.remove('compact');
+        }
+
+        /* ==========================================================================
+           RENDER FUNCTIONS
+           ========================================================================== */
+
+        function createMatchCard(match) {
+            const isLive = match.status === 'LIVE';
+            const statusHtml = isLive 
+                ? `<div class="live-pulse"><span class="live-dot"></span>${match.min}'</div>`
+                : `<span style="color:var(--text-tertiary); font-weight:700;">${match.status === 'FT' ? 'FULL TIME' : match.time}</span>`;
+                
+            let html = `
+                <div class="match-header">
+                    <span class="match-meta">Group ${match.group} • ${match.date}</span>
+                    ${statusHtml}
+                </div>
+                <div class="match-teams">
+                    <div class="team-block">
+                        <div class="flag-lg">${FLAGS[match.home] || '🏳️'}</div>
+                        <span class="team-code">${match.home}</span>
+                    </div>
+                    <div class="match-score-block">
+                        <div class="score-row">
+                            <span class="${isLive ? 'text-live' : ''}">${match.hs !== null ? match.hs : '-'}</span>
+                            <span class="score-sep">:</span>
+                            <span class="${isLive ? 'text-live' : ''}">${match.as !== null ? match.as : '-'}</span>
+                        </div>
+                    </div>
+                    <div class="team-block">
+                        <div class="flag-lg">${FLAGS[match.away] || '🏳️'}</div>
+                        <span class="team-code">${match.away}</span>
+                    </div>
+                </div>
+            `;
+            
+            if (isLive) {
+                const pct = (parseInt(match.min) / 90) * 100;
+                html += `<div class="match-timeline"><div class="match-progress" style="width: ${pct}%;"></div></div>`;
+            }
+            return html;
+        }
+
+        function renderDashboard() {
+            // Hero Live Match
+            const liveMatch = MATCHES.find(m => m.status === 'LIVE') || MATCHES[0];
+            document.getElementById('hero-match').innerHTML = createMatchCard(liveMatch);
+
+            // Dash Standings (Group F)
+            document.getElementById('dash-standings').innerHTML = generateTableHTML('F');
+        }
+
+        function renderMatchesView() {
+            const grid = document.getElementById('matches-grid');
+            grid.innerHTML = '';
+            
+            let filtered = MATCHES;
+            if (state.matchFilter === 'live') filtered = MATCHES.filter(m => m.status === 'LIVE');
+            if (state.matchFilter === 'upcoming') filtered = MATCHES.filter(m => m.status === 'UPCOMING');
+            if (state.matchFilter === 'finished') filtered = MATCHES.filter(m => m.status === 'FT');
+
+            filtered.forEach(match => {
+                const card = document.createElement('div');
+                card.className = `col-span-6 glass-panel match-card ${match.status === 'LIVE' ? 'is-live' : ''}`;
+                card.innerHTML = createMatchCard(match);
+                grid.appendChild(card);
+            });
+            
+            if(filtered.length===0) {
+                grid.innerHTML = `<div class="col-span-12" style="text-align:center; padding:40px; color:var(--text-tertiary);">No matches found for this filter.</div>`;
+            }
+        }
+
+        function renderGroupsView() {
+            const grid = document.getElementById('groups-grid');
+            grid.innerHTML = '';
+            Object.keys(GROUPS_DATA).forEach(group => {
+                const col = document.createElement('div');
+                col.className = 'col-span-6';
+                col.innerHTML = `
+                    <h2 class="text-sm uppercase text-secondary font-bold tracking-wide mb-4">Group ${group}</h2>
+                    <div class="glass-panel table-wrap">${generateTableHTML(group)}</div>
+                `;
+                grid.appendChild(col);
+            });
+        }
+
+        function generateTableHTML(groupKey) {
+            // Calculate standings dynamically
+            let tableData = GROUPS_DATA[groupKey].map(team => ({ t: team, p:0, w:0, d:0, l:0, gf:0, ga:0, pts:0, form:[] }));
+            
+            MATCHES.filter(m => m.group === groupKey && m.status !== 'UPCOMING').forEach(m => {
+                let ht = tableData.find(x => x.t === m.home);
+                let at = tableData.find(x => x.t === m.away);
+                if(!ht || !at) return;
+                
+                ht.p++; at.p++;
+                ht.gf+=m.hs; ht.ga+=m.as;
+                at.gf+=m.as; at.ga+=m.hs;
+                
+                if(m.hs > m.as) { ht.w++; ht.pts+=3; ht.form.push('w'); at.l++; at.form.push('l'); }
+                else if(m.as > m.hs) { at.w++; at.pts+=3; at.form.push('w'); ht.l++; ht.form.push('l'); }
+                else { ht.d++; ht.pts+=1; ht.form.push('d'); at.d++; at.form.push('d'); }
+            });
+
+            // Sort
+            tableData.sort((a,b) => {
+                if(b.pts !== a.pts) return b.pts - a.pts;
+                return (b.gf-b.ga) - (a.gf-a.ga);
+            });
+
+            let rows = tableData.map((row, idx) => {
+                let formHtml = row.form.slice(-3).map(f => `<div class="form-dot form-${f}"></div>`).join('');
+                return `
+                <tr>
+                    <td style="width:40px; text-align:center;">${idx+1}</td>
+                    <td>
+                        <div class="team-cell">
+                            <div class="${idx<2 ? 'pos-qual' : 'pos-out'}"></div>
+                            <div class="flag-sm">${FLAGS[row.t]||'🏳️'}</div>
+                            ${row.t}
+                        </div>
+                    </td>
+                    <td class="tabular-nums">${row.p}</td>
+                    <td class="tabular-nums">${(row.gf-row.ga)>0?'+':''}${row.gf-row.ga}</td>
+                    <td class="tabular-nums font-bold text-lg">${row.pts}</td>
+                    <td><div class="form-guide">${formHtml || '-'}</div></td>
+                </tr>`;
+            }).join('');
+
+            return `
+                <table>
+                    <thead><tr><th>#</th><th>Nation</th><th>MP</th><th>GD</th><th>Pts</th><th>Form</th></tr></thead>
+                    <tbody>${rows}</tbody>
+                </table>
+            `;
+        }
+
+        function renderBracketView() {
+            const container = document.getElementById('bracket-container');
+            // Simplified Mock Bracket architecture
+            const buildNode = (t1, s1, t2, s2, isLive=false) => `
+                <div class="bracket-match ${isLive ? 'is-live' : ''}" style="${isLive ? 'border-color:var(--accent-live); box-shadow:0 0 15px var(--accent-live-glow);' : ''}">
+                    <div class="b-team-row ${s1>s2?'b-winner':''}"><span>${FLAGS[t1]||'🏳️'} ${t1}</span> <span class="tabular-nums">${s1}</span></div>
+                    <div class="b-team-row ${s2>s1?'b-winner':''}"><span>${FLAGS[t2]||'🏳️'} ${t2}</span> <span class="tabular-nums">${s2}</span></div>
+                </div>
+            `;
+            
+            container.innerHTML = `
+                <div class="bracket-round">
+                    <div style="text-align:center; color:var(--text-secondary); font-size:12px; font-weight:bold; letter-spacing:1px; margin-bottom:-20px;">ROUND OF 16</div>
+                    ${buildNode('NED','2','USA','0')}
+                    ${buildNode('ARG','2','AUS','1')}
+                    ${buildNode('JPN','1','CRO','1')}
+                    ${buildNode('BRA','4','KOR','1')}
+                </div>
+                <div class="bracket-round">
+                    <div style="text-align:center; color:var(--text-secondary); font-size:12px; font-weight:bold; letter-spacing:1px; margin-bottom:-20px;">QUARTERFINALS</div>
+                    ${buildNode('NED','2','ARG','2')}
+                    ${buildNode('CRO','1','BRA','1')}
+                </div>
+                <div class="bracket-round">
+                    <div style="text-align:center; color:var(--accent-gold); font-size:12px; font-weight:bold; letter-spacing:1px; margin-bottom:-20px;">SEMIFINALS</div>
+                    ${buildNode('ARG','3','CRO','0', true)}
+                </div>
+            `;
+        }
+
+        function renderStatsView() {
+            const scorersCont = document.getElementById('stats-scorers');
+            scorersCont.innerHTML = STATS_PLAYERS.map((p, i) => `
+                <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.03); padding:12px 16px; border-radius:8px;">
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <div style="width:24px; text-align:center; font-weight:bold; color:${i===0?'var(--accent-gold)':'var(--text-tertiary)'};">${i+1}</div>
+                        <div class="flag-sm">${FLAGS[p.team]}</div>
+                        <div style="font-weight:600;">${p.name}</div>
+                    </div>
+                    <div class="tabular-nums font-bold text-lg">${p.goals}</div>
+                </div>
+            `).join('');
+
+            // Fake xG Bar Chart via CSS
+            const xgData = [ {t:'FRA', v:8.4}, {t:'ARG', v:7.2}, {t:'USA', v:6.1}, {t:'GER', v:5.8} ];
+            const max = 10;
+            const xgCont = document.getElementById('stats-xg');
+            xgCont.innerHTML = xgData.map(d => `
+                <div>
+                    <div style="display:flex; justify-content:space-between; margin-bottom:4px; font-size:0.875rem; font-weight:600;">
+                        <span>${FLAGS[d.t]} ${d.t}</span> <span>${d.v}</span>
+                    </div>
+                    <div style="height:8px; background:rgba(255,255,255,0.1); border-radius:4px; overflow:hidden;">
+                        <div style="height:100%; width:${(d.v/max)*100}%; background:var(--accent-cyan); border-radius:4px;"></div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        /* ==========================================================================
+           UTILITIES & SIMULATION ENGINE
+           ========================================================================== */
+        
+        function openSearchModal() {
+            const overlay = document.getElementById('search-modal-overlay');
+            overlay.classList.add('active');
+            document.getElementById('global-search').focus();
+            handleSearch(''); // Reset results
+        }
+
+        function handleSearch(query) {
+            const resultsCont = document.getElementById('search-results');
+            if(!query.trim()) { resultsCont.innerHTML = '<div style="color:var(--text-tertiary); padding:20px; text-align:center;">Start typing...</div>'; return; }
+            
+            const q = query.toLowerCase();
+            let matches = Object.keys(FLAGS).filter(k => k.toLowerCase().includes(q) || (FLAGS[k] && k.includes(q)));
+            
+            if(matches.length === 0) { resultsCont.innerHTML = '<div style="color:var(--text-tertiary); padding:20px; text-align:center;">No entities found.</div>'; return; }
+            
+            resultsCont.innerHTML = matches.map(m => `
+                <div class="result-item" onclick="alert('Navigate to ${m} page')">
+                    <div class="flag-sm">${FLAGS[m]}</div>
+                    <div style="font-weight:600;">${m} National Team</div>
+                    <div style="margin-left:auto; font-size:12px; color:var(--text-tertiary); background:rgba(255,255,255,0.1); padding:2px 8px; border-radius:10px;">TEAM</div>
+                </div>
+            `).join('');
+        }
+
+        function startLiveEngine() {
+            // Simulates live match clock ticking and occasional goals to make dashboard feel alive
+            setInterval(() => {
+                let reRenderNeeded = false;
+                MATCHES.forEach(m => {
+                    if(m.status === 'LIVE') {
+                        let currentMin = parseInt(m.min);
+                        if(currentMin < 90) m.min = (currentMin + 1).toString();
+                        
+                        // Random goal event (2% chance per tick for simulation)
+                        if(Math.random() < 0.02) {
+                            if(Math.random() > 0.5) m.hs++; else m.as++;
+                            // Flash effect logic could be added here
+                        }
+                        reRenderNeeded = true;
+                    }
+                });
+                
+                if(reRenderNeeded) {
+                    if(state.currentView === 'dashboard') renderDashboard();
+                    if(state.currentView === 'matches') renderMatchesView();
+                }
+            }, 30000); // Ticks every 30s in demo
+        }
+
+        // Boot
+        window.addEventListener('DOMContentLoaded', initApp);
+    </script>
 </body>
 </html>

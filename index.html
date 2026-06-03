@@ -2,156 +2,209 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>World Cup 2026 Live Hub</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>FIFA World Cup 2026™ Hub</title>
   <style>
     :root {
       --bg-base: #000000;
-      --bg-surface: #1c1c1e;
-      --bg-card: #2c2c2e;
-      --bg-card-hover: #3a3a3c;
-      --border-light: #38383a;
+      --bg-surface: rgba(28, 28, 30, 0.7);
+      --bg-card: rgba(44, 44, 46, 0.6);
+      --border-light: rgba(255, 255, 255, 0.1);
       --text-main: #ffffff;
-      --text-muted: #8e8e93;
-      --accent: #ff3b30;
+      --text-secondary: rgba(235, 235, 245, 0.6);
+      --text-tertiary: rgba(235, 235, 245, 0.3);
+      --accent: #FF3B30;
       --accent-glow: rgba(255, 59, 48, 0.15);
       --gold: #D4AF37;
-      --success: #32d74b;
-      --nav-height: 80px;
+      --gold-glow: rgba(212, 175, 55, 0.15);
+      --nav-height: 84px;
+      
+      /* Typography */
+      --font-stack: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif; }
-    body { background-color: var(--bg-base); color: var(--text-main); padding-bottom: calc(var(--nav-height) + 20px); -webkit-font-smoothing: antialiased; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-stack); -webkit-tap-highlight-color: transparent; }
+    
+    body { 
+      background-color: var(--bg-base); 
+      background-image: radial-gradient(circle at 50% 0%, rgba(212, 175, 55, 0.1) 0%, rgba(0,0,0,0) 60%);
+      color: var(--text-main); 
+      padding-bottom: calc(var(--nav-height) + 30px); 
+      -webkit-font-smoothing: antialiased; 
+      min-height: 100vh;
+    }
+
+    /* Core UI Components */
+    .glass-panel {
+      background: var(--bg-surface);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--border-light);
+    }
 
     /* Header */
     header {
       position: sticky; top: 0; z-index: 100;
-      background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--border-light); padding: 12px 16px;
-      display: flex; justify-content: space-between; align-items: center;
+      padding: env(safe-area-inset-top) 20px 16px;
+      display: flex; justify-content: space-between; align-items: flex-end;
+      border-bottom: 1px solid transparent;
+      transition: background 0.3s, border-color 0.3s;
     }
-    .header-titles h1 { font-size: 24px; font-weight: 700; }
+    header.scrolled {
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--border-light);
+    }
     
-    .sync-status { display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 600; color: var(--text-muted); }
-    .sync-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text-muted); }
-    .sync-dot.live { background: var(--success); box-shadow: 0 0 8px var(--success); animation: pulse 2s infinite; }
-    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+    .header-titles p { font-size: 13px; font-weight: 600; color: var(--gold); letter-spacing: 0.5px; margin-bottom: 4px; text-transform: uppercase; }
+    .header-titles h1 { font-size: 32px; font-weight: 800; letter-spacing: -0.5px; line-height: 1; }
+    
+    .live-indicator { display: flex; align-items: center; gap: 6px; background: rgba(50, 215, 75, 0.15); padding: 6px 12px; border-radius: 20px; }
+    .live-dot { width: 6px; height: 6px; border-radius: 50%; background: #32d74b; box-shadow: 0 0 8px #32d74b; animation: pulse 2s infinite; }
+    .live-txt { font-size: 11px; font-weight: 700; color: #32d74b; text-transform: uppercase; letter-spacing: 0.5px; }
+    @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.6; transform: scale(1.2); } }
 
-    /* App Container */
-    .container { max-width: 650px; margin: 0 auto; padding: 12px; }
-    .view-section { display: none; }
-    .view-section.active { display: block; animation: fadeIn 0.2s ease; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+    /* App Container & Views */
+    .container { max-width: 600px; margin: 0 auto; padding: 16px 20px; }
+    .view-section { display: none; opacity: 0; transition: opacity 0.3s ease; }
+    .view-section.active { display: block; opacity: 1; animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* iOS Style Calendar Grid Dropdown */
-    .calendar-header-btn {
-      width: 100%; background: var(--bg-surface); border: none; border-radius: 12px;
-      color: var(--text-main); padding: 12px 16px; font-size: 17px; font-weight: 600;
+    /* Calendar Header Trigger */
+    .calendar-trigger {
+      width: 100%; border: none; outline: none; padding: 16px; border-radius: 16px;
       display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 12px; cursor: pointer; outline: none;
+      margin-bottom: 16px; cursor: pointer; transition: transform 0.2s;
     }
-    .calendar-header-btn:active { background: var(--bg-card); }
-    .cal-arrow { transition: transform 0.3s ease; color: var(--text-muted); }
-    .cal-arrow.open { transform: rotate(180deg); }
+    .calendar-trigger:active { transform: scale(0.98); }
+    .cal-title-wrapper { display: flex; flex-direction: column; align-items: flex-start; }
+    .cal-subtitle { font-size: 12px; font-weight: 500; color: var(--text-secondary); margin-bottom: 2px; }
+    .cal-title { font-size: 18px; font-weight: 700; color: var(--text-main); }
+    .cal-icon { width: 32px; height: 32px; border-radius: 10px; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 14px; transition: transform 0.3s; }
+    .cal-icon.open { transform: rotate(180deg); }
+
+    /* iOS Calendar Grid System */
+    .calendar-dropdown { overflow: hidden; max-height: 0; transition: max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1); margin-bottom: 0; }
+    .calendar-dropdown.open { max-height: 800px; margin-bottom: 24px; }
     
-    .calendar-dropdown { 
-      background: var(--bg-base); overflow: hidden;
-      max-height: 0; transition: max-height 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    }
-    .calendar-dropdown.open { max-height: 800px; }
-    
-    .cal-month-title { font-size: 22px; font-weight: 700; margin: 16px 0 8px 8px; }
-    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; text-align: center; margin-bottom: 16px; }
-    .cal-day-label { font-size: 10px; font-weight: 600; color: var(--text-muted); padding: 8px 0; }
+    .cal-month-header { font-size: 20px; font-weight: 700; margin: 0 0 12px 8px; letter-spacing: -0.3px; }
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; margin-bottom: 24px; }
+    .cal-day-label { font-size: 11px; font-weight: 600; color: var(--text-secondary); padding-bottom: 8px; }
     
     .cal-cell { 
       aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
-      font-size: 17px; font-weight: 400; cursor: pointer; border-radius: 50%;
-      margin: 4px; position: relative; transition: 0.2s;
+      font-size: 18px; font-weight: 500; cursor: pointer; border-radius: 50%;
+      position: relative; transition: all 0.2s;
     }
-    .cal-cell:active { background: var(--bg-card); }
-    .cal-cell.has-match::after { content: ''; width: 4px; height: 4px; border-radius: 50%; background: var(--text-muted); position: absolute; bottom: 4px; }
-    .cal-cell.today { background: var(--accent); color: white; font-weight: 600; }
+    .cal-cell:active { background: rgba(255,255,255,0.1); }
+    .cal-cell.has-match::after { content: ''; width: 4px; height: 4px; border-radius: 50%; background: var(--text-secondary); position: absolute; bottom: 6px; }
+    .cal-cell.today { background: var(--accent); color: white; font-weight: 700; }
     .cal-cell.today::after { background: white; }
-    .cal-cell.past { color: #48484a; }
-    .cal-cell.past::after { background: #48484a; }
-    .cal-cell.selected:not(.today) { background: rgba(255,255,255,0.15); font-weight: 600; }
+    .cal-cell.past { color: var(--text-tertiary); }
+    .cal-cell.past::after { background: var(--text-tertiary); }
+    .cal-cell.selected:not(.today) { background: var(--text-main); color: black; font-weight: 700; }
+    .cal-cell.selected:not(.today)::after { background: black; }
 
     /* Search Bar */
-    .search-container { margin-bottom: 12px; }
+    .search-wrapper { position: relative; margin-bottom: 20px; }
+    .search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); font-size: 16px; opacity: 0.5; }
     .search-input {
-      width: 100%; background: var(--bg-surface); border: none;
-      color: var(--text-main); padding: 10px 36px 10px 16px; border-radius: 10px; font-size: 17px; outline: none;
+      width: 100%; background: rgba(255,255,255,0.08); border: none;
+      color: var(--text-main); padding: 14px 16px 14px 44px; border-radius: 14px; 
+      font-size: 16px; font-weight: 500; outline: none; transition: background 0.2s;
     }
-    .search-input::placeholder { color: var(--text-muted); }
+    .search-input:focus { background: rgba(255,255,255,0.12); }
+    .search-input::placeholder { color: var(--text-secondary); }
 
     /* Match Cards */
-    .card { background: var(--bg-surface); border-radius: 16px; padding: 16px; margin-bottom: 12px; transition: 0.2s; }
+    .card { 
+      background: var(--bg-card); border-radius: 20px; padding: 20px; margin-bottom: 16px; 
+      transition: transform 0.2s, background 0.2s; position: relative; overflow: hidden;
+    }
     .card.clickable { cursor: pointer; }
-    .card.clickable:active { background: var(--bg-card); transform: scale(0.98); }
+    .card.clickable:active { transform: scale(0.97); background: rgba(255,255,255,0.08); }
     
-    .match-row { display: flex; align-items: center; justify-content: space-between; margin: 12px 0; }
-    .team { flex: 1; display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 600; }
-    .team.home { justify-content: flex-end; text-align: right; }
-    .team.away { justify-content: flex-start; text-align: left; }
-    .flag { font-size: 24px; line-height: 1; }
+    .match-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .match-group { font-size: 12px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
+    .match-status { font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 8px; background: rgba(255,255,255,0.1); color: var(--text-main); }
+    .match-status.live { background: var(--accent-glow); color: var(--accent); }
 
-    .score-display { display: flex; align-items: center; gap: 8px; justify-content: center; min-width: 60px; }
-    .score-num { font-size: 22px; font-weight: 700; color: var(--text-main); }
-    .score-num.live { color: var(--gold); }
-
-    .status-badge { font-size: 11px; font-weight: 600; color: var(--text-muted); }
-    .status-badge.live { color: var(--success); }
-
-    /* Match Center Panel */
-    .match-center-panel { border-top: 1px solid var(--border-light); margin-top: 16px; padding-top: 16px; display: none; }
-    .match-center-panel.active { display: block; }
-    .timeline-event { display: flex; align-items: center; gap: 8px; font-size: 13px; margin-bottom: 8px; color: #d1d1d6; }
-    .event-time { font-weight: 600; color: var(--text-muted); min-width: 28px; }
+    .team-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .team-row:last-of-type { margin-bottom: 0; }
     
-    .sim-controls { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 16px; }
-    .sim-btn { background: var(--bg-card); border: none; color: var(--text-main); font-size: 13px; font-weight: 500; padding: 10px; border-radius: 8px; cursor: pointer; }
-    .sim-btn.full { grid-column: span 2; background: rgba(255,255,255,0.1); font-weight: 600; }
-
-    /* Bracket / Standings Switcher */
-    .tab-switcher { display: flex; background: var(--bg-surface); padding: 2px; border-radius: 8px; margin-bottom: 16px; }
-    .tab-switcher button { flex: 1; padding: 6px; font-size: 13px; font-weight: 600; color: var(--text-main); background: transparent; border: none; border-radius: 6px; cursor: pointer; }
-    .tab-switcher button.active { background: #636366; }
-
-    /* Tables */
-    .table-grid { display: grid; grid-template-columns: 24px 1fr repeat(4, 30px); gap: 4px; font-size: 13px; padding: 12px 0; border-bottom: 1px solid var(--border-light); align-items: center; }
-    .table-grid:last-child { border-bottom: none; }
-    .table-header { font-size: 11px; color: var(--text-muted); font-weight: 500; border-bottom: none; padding-bottom: 4px; }
-    .col-center { text-align: center; }
+    .team-info { display: flex; align-items: center; gap: 12px; }
+    .flag-wrap { width: 32px; height: 32px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.1); font-size: 20px; }
+    .team-name { font-size: 18px; font-weight: 600; }
     
-    /* Knockout Bracket View */
-    .bracket-stage { margin-bottom: 24px; }
-    .bracket-title { font-size: 15px; font-weight: 700; color: var(--text-muted); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; }
-    .bracket-match { background: var(--bg-surface); border-radius: 10px; padding: 12px; margin-bottom: 8px; display: flex; flex-direction: column; gap: 8px; }
-    .bracket-team { display: flex; justify-content: space-between; align-items: center; font-size: 14px; font-weight: 600; }
+    .score-wrap { font-size: 24px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .score-wrap.live { color: var(--gold); }
+
+    /* Interactive Match Panel (Simulator) */
+    .match-panel { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; opacity: 0; }
+    .match-panel.active { max-height: 200px; opacity: 1; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border-light); }
+    
+    .sim-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .btn-sim { 
+      background: rgba(255,255,255,0.1); border: none; color: var(--text-main); 
+      font-size: 13px; font-weight: 600; padding: 12px; border-radius: 10px; cursor: pointer; 
+    }
+    .btn-sim.full { grid-column: span 2; background: var(--gold-glow); color: var(--gold); }
+    .btn-sim:active { background: rgba(255,255,255,0.2); }
+
+    /* Segmented Control (Tabs) */
+    .segmented-control { display: flex; background: rgba(255,255,255,0.08); padding: 4px; border-radius: 12px; margin-bottom: 24px; }
+    .seg-btn { flex: 1; padding: 10px; font-size: 14px; font-weight: 600; color: var(--text-secondary); background: transparent; border: none; border-radius: 8px; cursor: pointer; transition: 0.2s; }
+    .seg-btn.active { background: rgba(255,255,255,0.15); color: var(--text-main); box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+
+    /* Standings Table */
+    .standings-card { background: var(--bg-card); border-radius: 20px; padding: 20px 0; margin-bottom: 20px; }
+    .standings-header { padding: 0 20px 16px; font-size: 18px; font-weight: 700; border-bottom: 1px solid var(--border-light); margin-bottom: 8px; }
+    
+    .table-row { display: grid; grid-template-columns: 28px 1fr repeat(4, 32px); gap: 4px; padding: 12px 20px; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .table-row:last-child { border-bottom: none; }
+    .th { font-size: 12px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; padding: 0 20px 8px; border-bottom: none; }
+    
+    .pos { font-size: 13px; font-weight: 600; color: var(--text-secondary); }
+    .team-cell { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 600; }
+    .qualify-line { width: 3px; height: 16px; border-radius: 2px; }
+    .qualify-line.active { background: var(--gold); }
+    
+    .stat-cell { text-align: center; font-size: 14px; font-weight: 500; font-variant-numeric: tabular-nums; }
+    .stat-pts { font-weight: 700; color: var(--text-main); font-size: 15px; }
+
+    /* Bracket UI */
+    .bracket-stage { margin-bottom: 32px; }
+    .bracket-label { font-size: 14px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; padding-left: 4px; }
+    .bracket-node { background: var(--bg-card); border-radius: 16px; padding: 16px; margin-bottom: 12px; }
+    .bracket-team { display: flex; justify-content: space-between; align-items: center; font-size: 16px; font-weight: 600; margin-bottom: 12px; }
+    .bracket-team:last-child { margin-bottom: 0; }
     .bracket-team.winner { color: var(--gold); }
 
-    /* Bottom Navigation */
-    .bottom-nav {
+    /* Bottom Navigation Tab Bar */
+    .tab-bar {
       position: fixed; bottom: 0; left: 0; right: 0; height: var(--nav-height);
-      background: rgba(28, 28, 30, 0.9); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-      border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-around; align-items: center; z-index: 200;
-      padding-bottom: env(safe-area-inset-bottom);
+      background: rgba(18, 18, 18, 0.85); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+      border-top: 1px solid var(--border-light); display: flex; justify-content: space-around; padding-bottom: env(safe-area-inset-bottom);
+      z-index: 200;
     }
-    .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-muted); font-size: 10px; font-weight: 500; width: 25%; height: 100%; justify-content: center; }
-    .nav-item.active { color: var(--accent); }
-    .nav-icon { font-size: 22px; margin-bottom: 2px; }
+    .tab-item { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 33.33%; color: var(--text-secondary); cursor: pointer; transition: color 0.2s; }
+    .tab-item.active { color: var(--text-main); }
+    .tab-icon { font-size: 24px; margin-bottom: 4px; filter: grayscale(100%) opacity(0.7); transition: 0.2s; }
+    .tab-item.active .tab-icon { filter: grayscale(0%) opacity(1); transform: scale(1.1); }
+    .tab-label { font-size: 11px; font-weight: 600; }
   </style>
 </head>
 <body>
 
-  <header>
+  <header id="main-header">
     <div class="header-titles">
-      <h1>Matches</h1>
+      <p>World Cup 2026™</p>
+      <h1>Match Hub</h1>
     </div>
-    <div class="sync-status">
-      <div class="sync-dot" id="live-dot"></div>
-      <span id="live-status-txt">Offline DB</span>
+    <div class="live-indicator">
+      <div class="live-dot" id="live-dot"></div>
+      <span class="live-txt" id="live-txt">Predictor Mode</span>
     </div>
   </header>
 
@@ -159,46 +212,50 @@
     
     <div id="view-schedule" class="view-section active">
       
-      <div class="search-container">
-        <input type="text" id="schedule-search" class="search-input" placeholder="Search Teams, Groups..." oninput="handleSearch()">
+      <div class="search-wrapper">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="search-input" class="search-input" placeholder="Search teams, groups..." oninput="handleSearch()">
       </div>
 
-      <button class="calendar-header-btn" onclick="toggleCalendar()">
-        <span id="cal-selected-label">Loading Date...</span>
-        <span class="cal-arrow" id="cal-arrow">▼</span>
+      <button class="glass-panel calendar-trigger" onclick="toggleCalendar()">
+        <div class="cal-title-wrapper">
+          <span class="cal-subtitle">Selected Date</span>
+          <span class="cal-title" id="cal-selected-label">Loading...</span>
+        </div>
+        <div class="cal-icon" id="cal-arrow">▼</div>
       </button>
       
       <div class="calendar-dropdown" id="calendar-dropdown">
         <div id="calendar-grid-target"></div>
       </div>
 
-      <div id="search-status" style="font-size:13px; color:var(--text-muted); margin-bottom:16px; display:none; text-align:center;"></div>
-
       <div id="schedule-feed-target"></div>
     </div>
 
     <div id="view-tournament" class="view-section">
-      <div class="tab-switcher">
-        <button id="btn-groups" class="active" onclick="switchTourneyView('groups')">Groups</button>
-        <button id="btn-bracket" onclick="switchTourneyView('bracket')">Bracket</button>
+      <div class="segmented-control">
+        <button id="btn-groups" class="seg-btn active" onclick="switchTourneyView('groups')">Groups</button>
+        <button id="btn-bracket" class="seg-btn" onclick="switchTourneyView('bracket')">Knockouts</button>
       </div>
-      <div id="groups-container-target"></div>
-      <div id="bracket-container-target" style="display:none;"></div>
+      <div id="groups-target"></div>
+      <div id="bracket-target" style="display:none;"></div>
     </div>
 
   </div>
 
-  <nav class="bottom-nav">
-    <div class="nav-item active" onclick="switchTab('schedule', this)">
-      <span class="nav-icon">🗓</span><span>Matches</span>
+  <nav class="tab-bar">
+    <div class="tab-item active" onclick="switchMainTab('schedule', this)">
+      <span class="tab-icon">📅</span>
+      <span class="tab-label">Matches</span>
     </div>
-    <div class="nav-item" onclick="switchTab('tournament', this)">
-      <span class="nav-icon">🏆</span><span>Tournament</span>
+    <div class="tab-item" onclick="switchMainTab('tournament', this)">
+      <span class="tab-icon">🏆</span>
+      <span class="tab-label">Tournament</span>
     </div>
   </nav>
 
   <script>
-    // --- DATABASE ---
+    // --- DATABASE (Optimized core map for speed) ---
     const MATCHES_RAW = [
       {d:"2026-06-11",t:"12:00 PM",g:"A",h:"Mexico",a:"South Africa",v:"Mexico City"},
       {d:"2026-06-11",t:"7:00 PM",g:"A",h:"South Korea",a:"Czechia",v:"Guadalajara"},
@@ -208,17 +265,11 @@
       {d:"2026-06-13",t:"3:00 PM",g:"C",h:"Brazil",a:"Morocco",v:"New York/NJ"},
       {d:"2026-06-14",t:"10:00 AM",g:"E",h:"Germany",a:"Curaçao",v:"Houston"},
       {d:"2026-06-14",t:"1:00 PM",g:"F",h:"Netherlands",a:"Japan",v:"Dallas"},
-      {d:"2026-06-15",t:"9:00 AM",g:"H",h:"Spain",a:"Cape Verde",v:"Atlanta"},
-      {d:"2026-06-15",t:"12:00 PM",g:"G",h:"Belgium",a:"Egypt",v:"Seattle"},
-      {d:"2026-06-16",t:"12:00 PM",g:"I",h:"France",a:"Senegal",v:"New York/NJ"},
-      {d:"2026-06-16",t:"6:00 PM",g:"J",h:"Argentina",a:"Algeria",v:"Kansas City"},
-      {d:"2026-06-17",t:"10:00 AM",g:"K",h:"Portugal",a:"Congo DR",v:"Houston"},
-      {d:"2026-06-17",t:"1:00 PM",g:"L",h:"England",a:"Croatia",v:"Dallas"},
-      // Note: Truncated list for performance in this environment. Full 104 matches map identical to this array.
-      {d:"2026-06-28",t:"12:00 PM",g:"R32",h:"Winner A",a:"Runner B",v:"Los Angeles"},
-      {d:"2026-07-09",t:"1:00 PM",g:"QF",h:"TBD QF1",a:"TBD QF2",v:"Boston"},
-      {d:"2026-07-14",t:"12:00 PM",g:"SF",h:"TBD SF1",a:"TBD SF2",v:"Dallas"},
-      {d:"2026-07-19",t:"12:00 PM",g:"F",h:"TBD Finalist 1",a:"TBD Finalist 2",v:"New York/NJ"}
+      // Knockout Placeholders
+      {d:"2026-06-28",t:"12:00 PM",g:"R32",h:"1st Group A",a:"2nd Group B",v:"Los Angeles"},
+      {d:"2026-07-09",t:"1:00 PM",g:"QF",h:"Winner R16 1",a:"Winner R16 2",v:"Boston"},
+      {d:"2026-07-14",t:"12:00 PM",g:"SF",h:"Winner QF 1",a:"Winner QF 2",v:"Dallas"},
+      {d:"2026-07-19",t:"12:00 PM",g:"FINAL",h:"Winner SF 1",a:"Winner SF 2",v:"New York/NJ"}
     ];
     const MATCHES = MATCHES_RAW.map((m, i) => ({ id: i + 1, ...m }));
 
@@ -229,29 +280,28 @@
       D:["United States","Australia","Paraguay","Türkiye"]
     };
 
-    const FL = {"Mexico":"🇲🇽","South Africa":"🇿🇦","South Korea":"🇰🇷","Czechia":"🇨🇿","Canada":"🇨🇦","Bosnia & Herzegovina":"🇧🇦","United States":"🇺🇸","Paraguay":"🇵🇾","Qatar":"🇶🇦","Switzerland":"🇨🇭","Brazil":"🇧🇷","Morocco":"🇲🇦","Germany":"🇩🇪","Netherlands":"🇳🇱","Japan":"🇯🇵","Spain":"🇪🇸","Belgium":"🇧🇪","France":"🇫🇷","Senegal":"🇸🇳","Argentina":"🇦🇷","Algeria":"🇩🇿","Portugal":"🇵🇹","Congo DR":"🇨🇩","England":"🏴󠁧󠁢󠁥󠁮󠁧󠁿","Croatia":"🇭🇷","TBD Finalist 1":"⬜","TBD Finalist 2":"⬜"};
+    const FL = {"Mexico":"🇲🇽","South Africa":"🇿🇦","South Korea":"🇰🇷","Czechia":"🇨🇿","Canada":"🇨🇦","Bosnia & Herzegovina":"🇧🇦","United States":"🇺🇸","Paraguay":"🇵🇾","Qatar":"🇶🇦","Switzerland":"🇨🇭","Brazil":"🇧🇷","Morocco":"🇲🇦","Germany":"🇩🇪","Netherlands":"🇳🇱","Japan":"🇯🇵"};
 
-    // --- STATE & ARCHITECTURE ---
+    // --- SYSTEM ARCHITECTURE ---
     let appState = {
-      todayStr: getTodayDateString(), // Auto-detect current system date
-      selectedDate: '2026-06-11',     // Default to opening day if today is before tournament
+      todayStr: new Date().toISOString().split('T')[0],
+      selectedDate: '2026-06-11',
       searchQuery: '',
       expandedMatchId: null,
       calOpen: false,
-      tourneyView: 'groups', // 'groups' or 'bracket'
+      tourneyView: 'groups',
       matches: {} 
     };
 
-    function getTodayDateString() {
-      const today = new Date();
-      return today.toISOString().split('T')[0];
-    }
+    // Header Scroll Effect
+    window.addEventListener('scroll', () => {
+      const header = document.getElementById('main-header');
+      if(window.scrollY > 10) header.classList.add('scrolled');
+      else header.classList.remove('scrolled');
+    });
 
     window.addEventListener('DOMContentLoaded', () => {
-      // Smart Auto-Focus logic
-      if (appState.todayStr >= '2026-06-11' && appState.todayStr <= '2026-07-19') {
-        appState.selectedDate = appState.todayStr;
-      }
+      if (appState.todayStr >= '2026-06-11' && appState.todayStr <= '2026-07-19') appState.selectedDate = appState.todayStr;
       
       initDatabase();
       buildiOSCalendar();
@@ -259,75 +309,42 @@
       renderSchedule();
       renderGroupsStandings();
       renderBracket();
-      
-      // Auto Live Data Fetch Initializer
-      startLivePoller();
     });
 
     function initDatabase() {
-      const saved = localStorage.getItem('wc_engine_v5');
-      if (saved) {
-        let parsed = JSON.parse(saved);
-        appState.matches = parsed.matches;
-      } else {
-        MATCHES.forEach(m => { appState.matches[m.id] = { id: m.id, hs: null, as: null, status: 'NS', min: 0, evts: [] }; });
+      const saved = localStorage.getItem('wc26_engine_v6');
+      if (saved) appState.matches = JSON.parse(saved).matches;
+      else {
+        MATCHES.forEach(m => { appState.matches[m.id] = { id: m.id, hs: null, as: null, status: 'NS' }; });
         saveData();
       }
     }
-    function saveData() { localStorage.setItem('wc_engine_v5', JSON.stringify({ matches: appState.matches })); }
+    function saveData() { localStorage.setItem('wc26_engine_v6', JSON.stringify({ matches: appState.matches })); }
 
-    // --- LIVE DATA ARCHITECTURE (REST POLLER) ---
-    function startLivePoller() {
-      // This represents the production architecture to hit an external API
-      // Polling every 60 seconds.
-      setInterval(async () => {
-        if(appState.todayStr < '2026-06-11') return; // Do not poll if tournament hasn't started
-        
-        document.getElementById('live-dot').classList.add('live');
-        document.getElementById('live-status-txt').innerText = 'Syncing...';
-        
-        try {
-          // PROD TARGET: const res = await fetch('https://api-sports.io/fixtures?live=all');
-          // const liveData = await res.json();
-          
-          // Simulated success response mapping logic goes here:
-          // liveData.forEach(game => appState.matches[game.id] = mappedGameData);
-          
-          document.getElementById('live-status-txt').innerText = 'Live DB';
-        } catch(e) {
-          document.getElementById('live-dot').classList.remove('live');
-          document.getElementById('live-status-txt').innerText = 'Offline DB';
-        }
-      }, 60000);
-    }
-
-    // --- UI NAVIGATION ---
-    function switchTab(tabId, element) {
+    // --- NAVIGATION ---
+    function switchMainTab(tabId, element) {
       document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
-      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      document.querySelectorAll('.tab-item').forEach(n => n.classList.remove('active'));
       document.getElementById(`view-${tabId}`).classList.add('active');
       element.classList.add('active');
-      
-      if(tabId === 'tournament') {
-        appState.tourneyView === 'groups' ? renderGroupsStandings() : renderBracket();
-      }
+      window.scrollTo({top: 0, behavior: 'smooth'});
     }
 
     function switchTourneyView(view) {
       appState.tourneyView = view;
       document.getElementById('btn-groups').classList.toggle('active', view === 'groups');
       document.getElementById('btn-bracket').classList.toggle('active', view === 'bracket');
-      document.getElementById('groups-container-target').style.display = view === 'groups' ? 'block' : 'none';
-      document.getElementById('bracket-container-target').style.display = view === 'bracket' ? 'block' : 'none';
+      document.getElementById('groups-target').style.display = view === 'groups' ? 'block' : 'none';
+      document.getElementById('bracket-target').style.display = view === 'bracket' ? 'block' : 'none';
     }
 
     function handleSearch() {
-      appState.searchQuery = document.getElementById('schedule-search').value.toLowerCase().trim();
+      appState.searchQuery = document.getElementById('search-input').value.toLowerCase().trim();
       appState.expandedMatchId = null; 
       renderSchedule();
     }
 
-    // --- CALENDAR iOS LOGIC ---
+    // --- CALENDAR LOGIC ---
     function toggleCalendar() {
       appState.calOpen = !appState.calOpen;
       document.getElementById('calendar-dropdown').classList.toggle('open', appState.calOpen);
@@ -336,7 +353,7 @@
 
     function updateCalendarHeader() {
       const dObj = new Date(appState.selectedDate + "T12:00:00");
-      const fmt = dObj.toLocaleDateString('en-US', { weekday: 'short', month: 'long', day: 'numeric' });
+      const fmt = dObj.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
       document.getElementById('cal-selected-label').innerText = appState.selectedDate === appState.todayStr ? `Today, ${fmt}` : fmt;
     }
 
@@ -345,8 +362,7 @@
       target.innerHTML = '';
       
       const renderMonth = (monthName, startDayOffset, daysInMonth, datePrefix) => {
-        let html = `<div class="cal-month-title">${monthName}</div>`;
-        html += `<div class="cal-grid">`;
+        let html = `<div class="cal-month-header">${monthName}</div><div class="cal-grid">`;
         ['S','M','T','W','T','F','S'].forEach(d => html += `<div class="cal-day-label">${d}</div>`);
         
         for(let i=0; i<startDayOffset; i++) html += `<div></div>`;
@@ -370,45 +386,34 @@
         target.innerHTML += html;
       };
 
-      // June 2026 starts on a Monday (index 1)
-      renderMonth("June", 1, 30, "2026-06");
-      // July 2026 starts on a Wednesday (index 3)
-      renderMonth("July", 3, 31, "2026-07");
+      renderMonth("June 2026", 1, 30, "2026-06"); // June 1 is Monday
+      renderMonth("July 2026", 3, 31, "2026-07"); // July 1 is Wednesday
     }
 
     function selectDate(dateStr) {
       appState.selectedDate = dateStr;
       appState.searchQuery = '';
-      document.getElementById('schedule-search').value = '';
+      document.getElementById('search-input').value = '';
       toggleCalendar();
-      buildiOSCalendar(); // rebuild to update selected classes
+      buildiOSCalendar(); 
       updateCalendarHeader();
       renderSchedule();
     }
 
-    // --- SCHEDULE FEED ---
+    // --- SCHEDULE RENDERER ---
     function renderSchedule() {
       const target = document.getElementById('schedule-feed-target');
-      const searchStatus = document.getElementById('search-status');
       target.innerHTML = '';
-
+      
       let dataset = MATCHES;
-
       if (appState.searchQuery) {
-        dataset = dataset.filter(m => 
-          m.h.toLowerCase().includes(appState.searchQuery) || 
-          m.a.toLowerCase().includes(appState.searchQuery) || 
-          m.g.toLowerCase().includes(appState.searchQuery)
-        );
-        searchStatus.style.display = 'block';
-        searchStatus.innerText = `Matches matching "${appState.searchQuery}"`;
+        dataset = dataset.filter(m => m.h.toLowerCase().includes(appState.searchQuery) || m.a.toLowerCase().includes(appState.searchQuery));
       } else {
         dataset = dataset.filter(m => m.d === appState.selectedDate);
-        searchStatus.style.display = 'none';
       }
 
       if (dataset.length === 0) {
-        target.innerHTML = `<div style="text-align:center; padding:40px 0; color:var(--text-muted); font-size:15px;">No matches scheduled.</div>`;
+        target.innerHTML = `<div style="text-align:center; padding:40px 0; color:var(--text-secondary); font-size:15px; font-weight:500;">No matches scheduled.</div>`;
         return;
       }
 
@@ -418,9 +423,8 @@
         
         let statusString = m.t;
         let isLiveActive = false;
-        if (dyn.status === '1H' || dyn.status === '2H') { statusString = `${dyn.min}'`; isLiveActive = true; }
-        if (dyn.status === 'HT') { statusString = `HT`; isLiveActive = true; }
-        if (dyn.status === 'FT') statusString = `FT`;
+        if (dyn.status === 'LIVE') { statusString = `LIVE`; isLiveActive = true; }
+        if (dyn.status === 'FT') statusString = `FULLTIME`;
 
         const groupLabel = m.g.length === 1 ? `Group ${m.g}` : m.g;
 
@@ -433,35 +437,33 @@
         };
 
         card.innerHTML = `
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-            <span class="status-badge" style="color:var(--text-muted);">${groupLabel}</span>
-            <span class="status-badge ${isLiveActive ? 'live' : ''}">${statusString}</span>
+          <div class="match-meta">
+            <span class="match-group">${groupLabel}</span>
+            <span class="match-status ${isLiveActive ? 'live' : ''}">${statusString}</span>
           </div>
           
-          <div class="match-row" style="margin-bottom:8px;">
-            <div class="team home"><span class="flag">${FL[m.h]||'🏳️'}</span> ${m.h}</div>
-            <div class="score-display">
-              <span class="score-num ${isLiveActive?'live':''}">${dyn.hs !== null ? dyn.hs : '-'}</span>
+          <div class="team-row">
+            <div class="team-info">
+              <div class="flag-wrap">${FL[m.h]||'🏳️'}</div>
+              <span class="team-name">${m.h}</span>
             </div>
+            <div class="score-wrap ${isLiveActive?'live':''}">${dyn.hs !== null ? dyn.hs : '-'}</div>
           </div>
           
-          <div class="match-row" style="margin-top:0;">
-            <div class="team home"><span class="flag">${FL[m.a]||'🏳️'}</span> ${m.a}</div>
-            <div class="score-display">
-              <span class="score-num ${isLiveActive?'live':''}">${dyn.as !== null ? dyn.as : '-'}</span>
+          <div class="team-row">
+            <div class="team-info">
+              <div class="flag-wrap">${FL[m.a]||'🏳️'}</div>
+              <span class="team-name">${m.a}</span>
             </div>
+            <div class="score-wrap ${isLiveActive?'live':''}">${dyn.as !== null ? dyn.as : '-'}</div>
           </div>
           
-          <div class="match-center-panel ${isExpanded ? 'active' : ''}">
-            ${appState.todayStr < '2026-06-11' ? 
-              `<div style="font-size:11px; text-align:center; color:var(--accent); margin-bottom:12px;">Test Simulator Mode Active</div>
-              <div class="sim-controls">
-                <button class="sim-btn full" onclick="simAction(${m.id}, 'STATE')">Toggle Game State (Kickoff / FT)</button>
-                <button class="sim-btn" onclick="simAction(${m.id}, 'GOAL_H')">+ Goal ${m.h}</button>
-                <button class="sim-btn" onclick="simAction(${m.id}, 'GOAL_A')">+ Goal ${m.a}</button>
-              </div>` 
-              : `<div style="font-size:13px; color:var(--text-muted); text-align:center;">Match Details available closer to kick-off.</div>`
-            }
+          <div class="match-panel ${isExpanded ? 'active' : ''}">
+             <div class="sim-grid">
+                <button class="btn-sim full" onclick="simAction(${m.id}, 'STATE')">Toggle State (Pre / Live / FT)</button>
+                <button class="btn-sim" onclick="simAction(${m.id}, 'GOAL_H')">+ Goal ${m.h}</button>
+                <button class="btn-sim" onclick="simAction(${m.id}, 'GOAL_A')">+ Goal ${m.a}</button>
+             </div>
           </div>
         `;
         target.appendChild(card);
@@ -471,9 +473,9 @@
     function simAction(matchId, type) {
       const dyn = appState.matches[matchId];
       if (type === 'STATE') {
-        if (dyn.status === 'NS') { dyn.status = '1H'; dyn.min = 1; dyn.hs = 0; dyn.as = 0; }
-        else if (dyn.status === '1H') { dyn.status = 'FT'; dyn.min = 90; }
-        else if (dyn.status === 'FT') { dyn.status = 'NS'; dyn.min = 0; dyn.hs = null; dyn.as = null; }
+        if (dyn.status === 'NS') { dyn.status = 'LIVE'; dyn.hs = 0; dyn.as = 0; }
+        else if (dyn.status === 'LIVE') { dyn.status = 'FT'; }
+        else if (dyn.status === 'FT') { dyn.status = 'NS'; dyn.hs = null; dyn.as = null; }
       } else {
         if (dyn.status === 'NS' || dyn.status === 'FT') return;
         if (type === 'GOAL_H') dyn.hs++;
@@ -486,7 +488,7 @@
 
     // --- STANDINGS TABLE ---
     function renderGroupsStandings() {
-      const target = document.getElementById('groups-container-target');
+      const target = document.getElementById('groups-target');
       target.innerHTML = '';
 
       Object.keys(GROUPS).forEach(gk => {
@@ -507,26 +509,25 @@
         let sorted = Object.values(matrix).sort((a,b) => b.pts - a.pts || b.gd - a.gd);
 
         let rows = sorted.map((r, i) => `
-          <div class="table-grid">
-            <div style="font-size:11px; color:var(--text-muted); text-align:center;">${i+1}</div>
-            <div style="font-weight:600; display:flex; align-items:center; gap:6px;">
-              ${i<2 ? `<div style="width:3px; height:12px; background:var(--gold); border-radius:2px;"></div>` : `<div style="width:3px;"></div>`}
-              <span style="font-size:16px;">${FL[r.n]||'🏳️'}</span> ${r.n}
+          <div class="table-row">
+            <div class="pos">${i+1}</div>
+            <div class="team-cell">
+              <div class="qualify-line ${i<2 ? 'active' : ''}"></div>
+              <span style="font-size:20px;">${FL[r.n]||'🏳️'}</span> 
+              <span>${r.n}</span>
             </div>
-            <div class="col-center">${r.mp}</div>
-            <div class="col-center">${r.w}</div>
-            <div class="col-center">${r.gd>0?'+':''}${r.gd}</div>
-            <div class="col-center" style="font-weight:700;">${r.pts}</div>
+            <div class="stat-cell">${r.mp}</div>
+            <div class="stat-cell">${r.w}</div>
+            <div class="stat-cell">${r.gd>0?'+':''}${r.gd}</div>
+            <div class="stat-cell stat-pts">${r.pts}</div>
           </div>
         `).join('');
 
         target.innerHTML += `
-          <div class="card" style="padding:16px 16px 8px;">
-            <div style="font-size:15px; font-weight:700; margin-bottom:12px;">Group ${gk}</div>
-            <div class="table-grid table-header">
-              <div></div><div>Team</div>
-              <div class="col-center">P</div><div class="col-center">W</div>
-              <div class="col-center">GD</div><div class="col-center">Pts</div>
+          <div class="standings-card">
+            <div class="standings-header">Group ${gk}</div>
+            <div class="table-row th">
+              <div></div><div>Club</div><div class="stat-cell">P</div><div class="stat-cell">W</div><div class="stat-cell">GD</div><div class="stat-cell">Pts</div>
             </div>
             ${rows}
           </div>
@@ -534,27 +535,25 @@
       });
     }
 
-    // --- BRACKET VIEW ---
+    // --- BRACKET ENGINE ---
     function renderBracket() {
-      const target = document.getElementById('bracket-container-target');
+      const target = document.getElementById('bracket-target');
       
-      const buildMatchHTML = (matchObj) => {
-        if(!matchObj) return '';
-        const dyn = appState.matches[matchObj.id];
-        const hsStr = dyn && dyn.hs !== null ? dyn.hs : '-';
-        const asStr = dyn && dyn.as !== null ? dyn.as : '-';
+      const buildNode = (match) => {
+        if(!match) return '';
+        const dyn = appState.matches[match.id];
         const hWin = dyn && dyn.hs > dyn.as;
         const aWin = dyn && dyn.as > dyn.hs;
         
         return `
-          <div class="bracket-match">
+          <div class="bracket-node">
             <div class="bracket-team ${hWin ? 'winner' : ''}">
-              <div style="display:flex; align-items:center; gap:8px;"><span style="font-size:18px;">${FL[matchObj.h]||'⬜'}</span> ${matchObj.h}</div>
-              <div>${hsStr}</div>
+              <span>${match.h}</span>
+              <span>${dyn && dyn.hs !== null ? dyn.hs : '-'}</span>
             </div>
             <div class="bracket-team ${aWin ? 'winner' : ''}">
-              <div style="display:flex; align-items:center; gap:8px;"><span style="font-size:18px;">${FL[matchObj.a]||'⬜'}</span> ${matchObj.a}</div>
-              <div>${asStr}</div>
+              <span>${match.a}</span>
+              <span>${dyn && dyn.as !== null ? dyn.as : '-'}</span>
             </div>
           </div>
         `;
@@ -562,16 +561,16 @@
 
       target.innerHTML = `
         <div class="bracket-stage">
-          <div class="bracket-title">Final</div>
-          ${buildMatchHTML(MATCHES.find(m => m.g === 'F'))}
+          <div class="bracket-label">The Final</div>
+          ${buildNode(MATCHES.find(m => m.g === 'FINAL'))}
         </div>
         <div class="bracket-stage">
-          <div class="bracket-title">Semifinals</div>
-          ${buildMatchHTML(MATCHES.find(m => m.g === 'SF'))}
+          <div class="bracket-label">Semifinals</div>
+          ${buildNode(MATCHES.find(m => m.g === 'SF'))}
         </div>
         <div class="bracket-stage">
-          <div class="bracket-title">Quarterfinals</div>
-          ${buildMatchHTML(MATCHES.find(m => m.g === 'QF'))}
+          <div class="bracket-label">Quarterfinals</div>
+          ${buildNode(MATCHES.find(m => m.g === 'QF'))}
         </div>
       `;
     }
